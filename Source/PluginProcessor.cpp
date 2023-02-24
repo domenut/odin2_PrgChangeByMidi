@@ -26,3 +26,4 @@
 #include "PluginProcessorProcess.cpp"
 #include "PluginProcessorConstructor.cpp"
 #include "PluginProcessorMisc.cpp"
+#include "MidiProgramChange.cpp"

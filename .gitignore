@@ -8,3 +8,4 @@ ignore
 cmake-build-*
 .idea/
 build/
+*.kate-swp

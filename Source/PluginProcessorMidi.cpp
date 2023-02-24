@@ -15,7 +15,13 @@
 
 //this file is included from PluginProcessor.cpp to split the class implementation
 
+// For IDE Only ->:
 #include "PluginProcessor.h"
+// <- For IDE Only END:
+
+// CMDEBUG>
+#define MIDI_CONTROLLER_NUMBER_BANK_SELECT 0
+// CMDEBUG<
 
 #define MIDI_CONTROLLER_NUMBER_BREATH 2
 
@@ -178,8 +184,16 @@ void OdinAudioProcessor::midiNoteOff(int p_midi_note) {
 	checkEndGlobalEnvelope();
 }
 
-void OdinAudioProcessor::handleMidiMessage(const MidiMessage &p_midi_message) {
-	//DBG(p_midi_message.getDescription());
+
+
+
+
+
+
+
+
+void OdinAudioProcessor::handleMidiMessage(const MidiMessage &p_midi_message ) {
+//    DBG(p_midi_message.getDescription());
 	// apply midi message
 	if (p_midi_message.isNoteOn()) {
 		handleMidiNoteOn(p_midi_message.getNoteNumber(), p_midi_message.getVelocity());
@@ -194,7 +208,7 @@ void OdinAudioProcessor::handleMidiMessage(const MidiMessage &p_midi_message) {
 	} else if (p_midi_message.isSustainPedalOn()) {
 		if (m_arpeggiator_on) {
 			m_arpeggiator.setSustainActive(true);
-		} else {
+        } else {
 			m_voice_manager.setSustainActive(true);
 		}
 		DBG("Sustain pedal pressed");
@@ -225,14 +239,17 @@ void OdinAudioProcessor::handleMidiMessage(const MidiMessage &p_midi_message) {
 		m_soft_pedal = 0.f;
 	} else if(p_midi_message.isController() && p_midi_message.getControllerNumber() == MIDI_CONTROLLER_NUMBER_BREATH) {
 		m_midi_breath = p_midi_message.getControllerValue() / 127.f;
-	}
-
-	else {
+    } else if(p_midi_message.getControllerNumber() == MIDI_CONTROLLER_NUMBER_BANK_SELECT){
+        selectBankOrCategory(p_midi_message.getControllerValue());
+    } else if(p_midi_message.isProgramChange()) {
+        selectProgram(p_midi_message.getProgramChangeNumber());
+    }
+    else {
 		if (!p_midi_message.isMidiClock()) {
 			//DBG("UNHANDELED MIDI MESSAGE: " + p_midi_message.getDescription());
-			if (p_midi_message.isController()) {
-				//DBG("Controller with number: " + std::to_string(p_midi_message.getControllerNumber()));
-			}
+            if (p_midi_message.isController()) {
+                DBG("Controller with number: " + std::to_string(p_midi_message.getControllerNumber()));
+            }
 		}
 	}
 

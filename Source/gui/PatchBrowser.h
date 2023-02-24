@@ -21,7 +21,11 @@
 
 #define DEFAULT_SOUNDBANK_LOCATION_STRING (ODIN_STORAGE_PATH + File::getSeparatorString() + "Soundbanks")
 
-class PatchBrowser    : public Component
+
+class PatchBrowser    : public Component,
+        // CMDEBUG>
+        public Timer
+        // CMDEBUG<
 {
 public:
     PatchBrowser(OdinAudioProcessor &p_processor, AudioProcessorValueTreeState &p_vts);
@@ -35,8 +39,15 @@ public:
 
 	std::function<void()> forceValueTreeLambda;
 
-
 private:
+    // CMDEBUG>
+    void midiProgChangeTimerInit();
+    void timerCallback() override ;
+    void categoryChanger();
+    void programChanger();
+    void bankChanger();
+    // CMDEBUG<
+
     void loadPatchWithFileBrowserAndCopyToCategory(String p_directory);
     void loadPatchFromOpenedFileStream(juce::FileInputStream &p_file_stream);
     void savePatchInOpenedFileStream(FileOutputStream &p_file_stream);

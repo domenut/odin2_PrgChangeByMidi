@@ -104,8 +104,27 @@ public:
 	Atomic<int> m_step_led_active = -1;
 	Tunings::Tuning m_tuning;
 
+    // CMDEBUG>
+    // For Syncing Gui on Midi program change
+//    program_change_trigger:0=no trigger, 1=patch, 2=category, 3=soundbank
+    int program_change_trigger;
+    String bank_change_dir;
+    String category_change_dir;
+    String program_change_path;
+    // CMDEBUG<
+
 private:
-	void setSampleRate(float p_samplerate);
+    // CMDEBUG> (in: MidiProgramChange.cpp)
+    // These allow Midi Patch changes (hopefully)
+    void selectBankOrCategory(int index);
+    String current_bank = "";
+    String current_category = "";
+    void selectProgram(int index);
+    void selectCategory(int index);
+    void selectSoundbank(int index);
+    // CMDEBUG<
+
+    void setSampleRate(float p_samplerate);
 	void setFilter3EnvValue();
 	void setBPM(float BPM);
 	void setPitchWheelValue(int p_value);
@@ -113,6 +132,8 @@ private:
 	void checkEndGlobalEnvelope();
 	void setModulationPointers();
 	void addNonAudioParametersToTree();
+
+
 	void handleMidiMessage(const MidiMessage &p_midi_message);
 	void createDrawTablesFromValueTree();
 	bool checkLoadParameter(const String &p_name);

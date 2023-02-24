@@ -61,7 +61,7 @@ PatchBrowser::PatchBrowser(OdinAudioProcessor &p_processor, AudioProcessorValueT
 		}
 		DBG(p_string + " was pressed in soundbank");
 		m_category_selector.setDirectory(m_soundbank_selector.getDirectory() + File::getSeparatorString() + p_string);
-		m_patch_selector.setDirectory(m_category_selector.getFirstSubDirectoryAndHighlightIt());
+        m_patch_selector.setDirectory(m_category_selector.getFirstSubDirectoryAndHighlightIt());
 	};
 
 	m_category_selector.passValueToPatchBrowser = [&](String p_string) {
@@ -97,18 +97,17 @@ PatchBrowser::PatchBrowser(OdinAudioProcessor &p_processor, AudioProcessorValueT
 			return;
 		}
 
+        DBG("Try to open patch: " + m_patch_selector.getDirectory() + File::getSeparatorString() + p_string);
 
-		DBG("Try to open patch: " + m_patch_selector.getDirectory() + File::getSeparatorString() + p_string);
 		String absolute_path = m_patch_selector.getDirectory() + File::getSeparatorString() + p_string;
-
 		File file_to_open(absolute_path);
-
 		FileInputStream file_stream(file_to_open);
 		if (file_stream.openedOk()) {
-			loadPatchFromOpenedFileStream(file_stream);
-			m_value_tree.state.getChildWithName("misc").setProperty(
-			    "current_patch_filename", file_to_open.getFileName(), nullptr);
-			DBG("set filename in valuetree: " +
+            loadPatchFromOpenedFileStream(file_stream);
+            m_value_tree.state.getChildWithName("misc").setProperty(
+                "current_patch_filename", file_to_open.getFileName(), nullptr);
+
+            DBG("set filename in valuetree: " +
 			    m_value_tree.state.getChildWithName("misc")["current_patch_filename"].toString());
 		}
 	};
@@ -642,10 +641,53 @@ PatchBrowser::PatchBrowser(OdinAudioProcessor &p_processor, AudioProcessorValueT
 	    "Soundbank folder\n" + DEFAULT_SOUNDBANK_LOCATION_STRING +
 	        "\n\nnot found! Please create this folder or reinstall the plugin");
 
+    midiProgChangeTimerInit(); //For reacting to Midi Program change + Bank(category?) select(cc 0 : value),
+//    This only worked while gui is showing, but it's left here to update gui on patch change.
+
 }
 
 PatchBrowser::~PatchBrowser() {
 }
+
+
+// CMDEBUG> (Updat gui if shown, with Midi:program/bank/category changes)
+// Needs another way, as this changes all params twice! (Ok when headless)
+void PatchBrowser::midiProgChangeTimerInit(){
+    Timer::startTimer(20);
+}
+void PatchBrowser::timerCallback(){
+    if (m_audio_processor.program_change_trigger == 1){
+        programChanger();
+    }else if (m_audio_processor.program_change_trigger == 2){
+        categoryChanger();
+    }else if( m_audio_processor.program_change_trigger == 3){
+        bankChanger();
+    }
+    m_audio_processor.program_change_trigger = 0;
+}
+
+void PatchBrowser::bankChanger(){
+    m_soundbank_selector.passValueToPatchBrowser(m_audio_processor.bank_change_dir);
+    m_soundbank_selector.getSubDirectoryAndHighlightItFromName(m_category_selector.getDirectory());
+}
+
+void PatchBrowser::categoryChanger(){
+    bankChanger();
+    m_category_selector.passValueToPatchBrowser(m_audio_processor.category_change_dir);
+    m_category_selector.getSubDirectoryAndHighlightItFromName(m_patch_selector.getDirectory());
+}
+
+void PatchBrowser::programChanger(){
+    File file_to_open(m_audio_processor.program_change_path);
+    FileInputStream file_stream(file_to_open);
+    if (file_stream.openedOk()) {
+        loadPatchFromOpenedFileStream(file_stream);
+        m_category_selector.getSubDirectoryAndHighlightItFromName(m_patch_selector.getDirectory());
+        m_patch_selector.getSubDirectoryAndHighlightItFromName(m_audio_processor.program_change_path);
+    }
+}
+// CMDEBUG<
+
 
 void PatchBrowser::paint(Graphics &g) {
 	// g.fillAll(getLookAndFeel().findColour(ResizableWindow::backgroundColourId)); // clear the background
@@ -686,7 +728,9 @@ void PatchBrowser::setGUIBig() {
 	m_background = ImageCache::getFromMemory(BinaryData::patch_browser_window_150_png,
 	                                         BinaryData::patch_browser_window_150_pngSize);
 
-	setFirstSoundbankActive();
+// CMDEBUG>
+    setFirstSoundbankActive();
+// CMDEBUG<
 }
 void PatchBrowser::setGUISmall() {
 	m_GUI_big = false;
@@ -711,7 +755,9 @@ void PatchBrowser::setGUISmall() {
 	m_background =
 	    ImageCache::getFromMemory(BinaryData::patch_browser_window_png, BinaryData::patch_browser_window_pngSize);
 
-	setFirstSoundbankActive();
+// CMDEBUG>
+    setFirstSoundbankActive();
+// CMDEBUG<
 }
 
 void PatchBrowser::loadPatchFromOpenedFileStream(juce::FileInputStream &p_file_stream) {
@@ -1196,8 +1242,8 @@ void PatchBrowser::loadSoundbankWithFileBrowser(String p_directory) {
 
 void PatchBrowser::setFirstSoundbankActive() {
 	//factory presets:
-	m_soundbank_selector.highlightFirstEntry();
-	m_category_selector.setDirectoryFactoryPresetCategory();
-	m_category_selector.highlightFirstEntry();
-	m_patch_selector.setDirectoryFactoryPresetPreset("Arps & Sequences");
+    m_soundbank_selector.highlightFirstEntry();
+    m_category_selector.setDirectoryFactoryPresetCategory();
+    m_category_selector.highlightFirstEntry();
+    m_patch_selector.setDirectoryFactoryPresetPreset("Arps & Sequences");
 }
