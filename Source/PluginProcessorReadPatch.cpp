@@ -136,12 +136,29 @@ void OdinAudioProcessor::readPatch(const ValueTree &newState) {
 		}
 	}
 
+// CMDEBUG>
+// Read patch, Value tree
+    const ValueTree &midi_learn = newStateMigrated.getChildWithName("midi_learn");
+    for (int i = 0; i < m_value_tree_midi_learn.getNumProperties(); ++i) {
+        DBG("(midi_learn) " );
+        if (mod_tree.hasProperty(m_value_tree_midi_learn.getPropertyName(i))) {
+            m_value_tree_midi_learn.setProperty(m_value_tree_midi_learn.getPropertyName(i),
+                                         mod_tree.getProperty(m_value_tree_midi_learn.getPropertyName(i)),
+                                         nullptr);
+            m_value_tree_midi_learn.sendPropertyChangeMessage((m_value_tree_mod.getPropertyName(i)));
+            DBG("Non-audio property (midi_learn) " + m_value_tree_midi_learn.getPropertyName(i).toString().toStdString());
+        } else {
+            DBG("Didn't find non-audio property (midi_learn) " + m_value_tree_midi_learn.getPropertyName(i).toString().toStdString());
+        }
+    }
+// CMDEBUG<
+
 	for (int i = 0; i < newStateMigrated.getNumChildren(); ++i) {
 		// all children which are an audio param have two properties (name and value)
 		if (newStateMigrated.getChild(i).getNumProperties() == 2) {
 
-			//DBG(newStateMigrated.getChild(i).getProperty(newStateMigrated.getChild(i).getPropertyName(0)).toString());
-			//DBG(newStateMigrated.getChild(i).getProperty(newStateMigrated.getChild(i).getPropertyName(1)).toString());
+            DBG(newStateMigrated.getChild(i).getProperty(newStateMigrated.getChild(i).getPropertyName(0)).toString());
+            DBG(newStateMigrated.getChild(i).getProperty(newStateMigrated.getChild(i).getPropertyName(1)).toString());
 
 			String name =
 			    newStateMigrated.getChild(i).getProperty(newStateMigrated.getChild(i).getPropertyName(0)).toString();
@@ -150,9 +167,8 @@ void OdinAudioProcessor::readPatch(const ValueTree &newState) {
 				SETAUDIOFULLRANGESAFE(
 				    name, newStateMigrated.getChild(i).getProperty(newStateMigrated.getChild(i).getPropertyName(1)));
 			}
-			//DBG("Value on tree is now: is now:" + m_value_tree.getParameterAsValue(name).getValue().toString());
-
-			//DBG("");
+//            DBG("Value on tree is now: is now:" + m_value_tree.getParameterAsValue(name).getValue().toString());
+//            DBG("");
 		}
 	}
 

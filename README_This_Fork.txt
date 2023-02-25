@@ -18,7 +18,7 @@ Current caveats:
    
    eg: 1_ *        - [midi cc 0 , value 64] selects this soundbank. (64 - 63 = 1_)
         1_ *       - [midi cc 0 , value 1 ] selects this category. (IN SELECTED SOUNDBANK!)
-          6_ *     - [midi program change value: 6]  selects this patch. (IN SELECTED CATEGORY!)
+          6_ *     - [midi program change value: 6]  selects this patch. (IN SELECTED CATEGORY!) DO NOT SEND ZERO VALUE, only 1 to 127
           
     2) Although it works, when gui is showing and reflecting changes, the parameters are being changed twice. ( need to go deeper to fix )
        This problem goes away when running headless in carla.

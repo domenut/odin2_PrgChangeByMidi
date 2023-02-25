@@ -5,13 +5,14 @@
 //
 
 // CMDEBUG>
+// Program Change
 
 void OdinAudioProcessor::selectBankOrCategory(int index){
     if((index >= 0) && (index <= 63)){
         selectCategory(index);
     }
     if((index >= 64) && (index <= 127)){
-        selectSoundbank(index - 63);
+        selectSoundbank(index - 64);
     }
 }
 
@@ -33,7 +34,8 @@ void OdinAudioProcessor::selectProgram(int index){
         if (file_stream.openedOk()) {
             file_stream.setPosition(0);
             readPatch(ValueTree::readFromStream(file_stream).createCopy());
-            program_change_path = current_dir.getFullPathName() + File::getSeparatorString() + file_array[0].getFileName() ;
+            program_change_path = current_dir.getFullPathName() +
+                    File::getSeparatorString() + file_array[0].getFileName() ;
             program_change_trigger = 1 ;
         }
     }
@@ -44,7 +46,8 @@ void OdinAudioProcessor::selectCategory(int index){
         selectSoundbank(1);
     }
     String wildcard = (String(index) + "_*");
-    File category_dir(DEFAULT_SOUNDBANK_LOCATION_STRING + File::getSeparatorString() + current_bank);
+    File category_dir(DEFAULT_SOUNDBANK_LOCATION_STRING + File::getSeparatorString() +
+                      current_bank);
     Array<File> file_array = category_dir.findChildFiles(1, false, wildcard);
     current_category = file_array[0].getFileName();
     category_change_dir = current_category ;

@@ -98,20 +98,28 @@ void OdinAudioProcessor::getStateInformation(MemoryBlock &destData) {
 	xml->addChildElement(kbm);
 
 	copyXmlToBinary(*xml, destData);
+
+    DBG("********** file saved by daw************");
+//    DBG(xml->toString());
+    DBG("========== file saved by daw ============");
+    DBG("");
 }
 
 //this is called when DAW restores a file
 void OdinAudioProcessor::setStateInformation(const void *data, int sizeInBytes) {
 
-// disable for standalone plugins
-//    if (wrapperType == wrapperType_Standalone) {
-//        return;
-//    }
+//disable for standalone plugins
+//   if (wrapperType == wrapperType_Standalone) {
+//       return;
+//   }
 
 	std::unique_ptr<XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
 	if (xmlState.get() != nullptr) {
 
-		//DBG(xmlState->toString());
+        DBG("********** file restored by daw ************");
+//        DBG(xmlState->toString());
+        DBG("========== file restored by daw ============");
+        DBG("");
 
 		//read tunings and remove them from xmltree:
 		Tunings::Scale scl           = Tunings::evenTemperament12NoteScale();
@@ -173,6 +181,8 @@ void OdinAudioProcessor::setStateInformation(const void *data, int sizeInBytes) 
 				m_midi_control_param_map.emplace(
 				    (int)m_value_tree_midi_learn[m_value_tree_midi_learn.getPropertyName(i)],
 				    m_value_tree.getParameter(m_value_tree_midi_learn.getPropertyName(i)));
+                    DBG("*** Misc1, : " +  m_value_tree_midi_learn[m_value_tree_midi_learn.getPropertyName(i)].toString() );
+                    DBG("*** Misc2, : " +  m_value_tree_midi_learn.getPropertyName(i).toString()  );
 			}
 
 			createDrawTablesFromValueTree();

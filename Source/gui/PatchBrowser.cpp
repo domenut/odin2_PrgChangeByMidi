@@ -801,12 +801,21 @@ void PatchBrowser::loadPatchFromOpenedFileStream(juce::FileInputStream &p_file_s
 
 	//this forces values onto the GUI (patch label as well)
 	//	forceValueTreeLambda();
+//    DBG("<<<<<<<<<<<<<<< new value tree state? >>>>>>>>>>>>>");
+//    DBG(m_value_tree.state.toXmlString());
+//   DBG("<<<<<<<<<..... new value tree state? .....>>>>>>>>>>>");
 }
 
 bool PatchBrowser::checkForBiggerVersion(FileInputStream &p_file_stream, std::string &p_version_string) {
 	p_file_stream.setPosition(0);
 	auto value_tree_read = ValueTree::readFromStream(p_file_stream);
 	int patch_version    = value_tree_read.getChildWithName("misc")["patch_migration_version"];
+
+
+//    DBG("++++++++++++ FILE value tree +++++++++");
+//    DBG(value_tree_read.toXmlString());
+//    DBG("////////// FILE value tree  //////////////");
+
 	if (patch_version > ODIN_PATCH_MIGRATION_VERSION) {
 		p_version_string = "2." + std::to_string((int)value_tree_read.getChildWithName("misc")["version_minor"]) + "." +
 		                   std::to_string((int)value_tree_read.getChildWithName("misc")["version_patch"]);
@@ -841,7 +850,7 @@ void PatchBrowser::savePatchInOpenedFileStream(FileOutputStream &p_file_stream) 
 
 	//make a deep copy and remove the midi_learn part and file name
 	ValueTree copy_with_removed_params = m_value_tree.state.createCopy();
-	copy_with_removed_params.removeChild(copy_with_removed_params.getChildWithName("midi_learn"), nullptr);
+//	copy_with_removed_params.removeChild(copy_with_removed_params.getChildWithName("midi_learn"), nullptr);
 	copy_with_removed_params.getChildWithName("misc").removeProperty("current_patch_filename", nullptr);
 	copy_with_removed_params.getChildWithName("misc").removeProperty("current_patch_directory", nullptr);
 	copy_with_removed_params.getChildWithName("misc").removeProperty("arp_mod_selected", nullptr);
@@ -882,7 +891,9 @@ void PatchBrowser::savePatchInOpenedFileStream(FileOutputStream &p_file_stream) 
 	//save load directory
 	//m_last_directory = file_to_write.getParentDirectory().getFullPathName();
 
-	DBG(copy_with_removed_params.toXmlString());
+//    DBG("*#*#*#*#*# cpy with removed params #*#*#*#*#*#*");
+//	DBG(copy_with_removed_params.toXmlString());
+//    DBG("*#*#*#*#*# cpy with removed params #*#*#*#*#*#*");
 
 	m_value_tree.state.getChildWithName("misc").setProperty("current_patch_filename",
 	                                                        p_file_stream.getFile().getFileName(),
@@ -895,6 +906,9 @@ void PatchBrowser::savePatchInOpenedFileStream(FileOutputStream &p_file_stream) 
 	    m_value_tree.state.getChildWithName("misc")["current_patch_filename"].toString());
 	DBG("set filepath in valuetree: " +
 	    m_value_tree.state.getChildWithName("misc")["current_patch_directory"].toString());
+    DBG("midi_learn in valuetree?: " +
+        m_value_tree.state.getChildWithName("midi_learn")["*"].toString());
+    DBG("midi_learn in valuetree?: " + String(m_value_tree.state.getChildWithName("midi_learn").getNumChildren() ) );
 }
 
 bool PatchBrowser::usesWavedraw(int p_osc) {

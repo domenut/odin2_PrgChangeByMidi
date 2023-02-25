@@ -184,14 +184,6 @@ void OdinAudioProcessor::midiNoteOff(int p_midi_note) {
 	checkEndGlobalEnvelope();
 }
 
-
-
-
-
-
-
-
-
 void OdinAudioProcessor::handleMidiMessage(const MidiMessage &p_midi_message ) {
 //    DBG(p_midi_message.getDescription());
 	// apply midi message
@@ -239,7 +231,7 @@ void OdinAudioProcessor::handleMidiMessage(const MidiMessage &p_midi_message ) {
 		m_soft_pedal = 0.f;
 	} else if(p_midi_message.isController() && p_midi_message.getControllerNumber() == MIDI_CONTROLLER_NUMBER_BREATH) {
 		m_midi_breath = p_midi_message.getControllerValue() / 127.f;
-    } else if(p_midi_message.getControllerNumber() == MIDI_CONTROLLER_NUMBER_BANK_SELECT){
+    } else if(p_midi_message.isController() && p_midi_message.getControllerNumber() == MIDI_CONTROLLER_NUMBER_BANK_SELECT){
         selectBankOrCategory(p_midi_message.getControllerValue());
     } else if(p_midi_message.isProgramChange()) {
         selectProgram(p_midi_message.getProgramChangeNumber());
@@ -248,7 +240,7 @@ void OdinAudioProcessor::handleMidiMessage(const MidiMessage &p_midi_message ) {
 		if (!p_midi_message.isMidiClock()) {
 			//DBG("UNHANDELED MIDI MESSAGE: " + p_midi_message.getDescription());
             if (p_midi_message.isController()) {
-                DBG("Controller with number: " + std::to_string(p_midi_message.getControllerNumber()));
+//                DBG("Controller with number: " + std::to_string(p_midi_message.getControllerNumber()));
             }
 		}
 	}
@@ -266,12 +258,13 @@ void OdinAudioProcessor::handleMidiMessage(const MidiMessage &p_midi_message ) {
 			m_value_tree.state.getChildWithName("midi_learn")
 			    .setProperty(m_midi_learn_parameter_ID, p_midi_message.getControllerNumber(), nullptr);
 
-			DBG(m_value_tree.state.toXmlString());
+//			DBG(m_value_tree.state.toXmlString());
 
-			DBG("Added MIDI control for parameter " +
-			    m_midi_control_param_map.find(p_midi_message.getControllerNumber())->second->paramID +
+            DBG("Added MIDI control for parameter " +
+                m_midi_control_param_map.find(p_midi_message.getControllerNumber())->second->paramID +
 			    " on controller number " + std::to_string(p_midi_message.getControllerNumber()));
 			m_midi_learn_parameter_ID = "";
+
 #ifdef ODIN_DEBUG
 			int counter = 1;
 			DBG("=========");
@@ -283,14 +276,14 @@ void OdinAudioProcessor::handleMidiMessage(const MidiMessage &p_midi_message ) {
 		}
 
 		// do midi control
-		for (auto const &control : m_midi_control_param_map) {
-			if (control.first == p_midi_message.getControllerNumber()) {
-				//todo replace lock by async MM call
-				//const MessageManagerLock mmLock;
-				control.second->setValueNotifyingHost(/*control.second->convertFrom0to1(*/
-				                                      (float)p_midi_message.getControllerValue() / 127.f); //));
-			}
-		}
+        for (auto const &control : m_midi_control_param_map) {
+            if (control.first == p_midi_message.getControllerNumber()) {
+                //todo replace lock by async MM call
+                //const MessageManagerLock mmLock;
+                control.second->setValueNotifyingHost(/*control.second->convertFrom0to1(*/
+                                                      (float)p_midi_message.getControllerValue() / 127.f); //));
+            }
+        }
 	}
 }
 

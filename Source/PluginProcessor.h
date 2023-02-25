@@ -253,7 +253,7 @@ private:
 	OdinMidiLearnBase *m_midi_learn_control = nullptr;
 	String m_midi_learn_parameter_ID        = "";
 	std::multimap<int, RangedAudioParameter *> m_midi_control_param_map;
-	bool m_midi_learn_parameter_active = false;
+    bool m_midi_learn_parameter_active = false;
 
 	float m_osc_vol_smooth[3]             = {1.f, 1.f, 1.f}; // factor
 	float m_fil_gain_smooth[3]            = {1.f, 1.f, 1.f}; // factor
