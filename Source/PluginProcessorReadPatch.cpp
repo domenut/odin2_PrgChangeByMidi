@@ -20,12 +20,15 @@
 // read patch by iterating over all attritubes,
 // setting them if they are available and setting to default if not
 void OdinAudioProcessor::readPatch(const ValueTree &newState) {
-	//DBG(newStateMigrated.toXmlString());
 
 	//create deep copy for modification
 	auto newStateMigrated = newState.createCopy();
 
-	migratePatch(newStateMigrated);
+//    DBG("(PP)ReadPatch:  27:  newStateMigrated Has midi map OK ");
+//    DBG(newStateMigrated.toXmlString());
+//    DBG("''''''''' newStateMigrated ''''''''''''");
+
+    migratePatch(newStateMigrated);
 
 //avoid compiler warning unused variable
 #if (JUCE_DEBUG && !JUCE_DISABLE_ASSERTIONS) || DOXYGEN
@@ -54,17 +57,17 @@ void OdinAudioProcessor::readPatch(const ValueTree &newState) {
 	//if new value has no draw tree, create it from scratch
 	for (int osc = 1; osc < 4; ++osc) {
 		if (!(draw_tree.hasProperty(String("osc" + std::to_string(osc) + "_wavedraw_values_0")))) {
-			DBG("Tree has no wavedraw" + std::to_string(osc) + " values, fallback to generation");
+//			DBG("Tree has no wavedraw" + std::to_string(osc) + " values, fallback to generation");
 			writeDefaultWavedrawValuesToTree(osc);
 		}
 
 		if (!(draw_tree.hasProperty(String("osc" + std::to_string(osc) + "_chipdraw_values_0")))) {
-			DBG("Tree has no chipdraw" + std::to_string(osc) + " values, fallback to generation");
+//			DBG("Tree has no chipdraw" + std::to_string(osc) + " values, fallback to generation");
 			writeDefaultChipdrawValuesToTree(osc);
 		}
 
 		if (!(draw_tree.hasProperty(String("osc" + std::to_string(osc) + "_specdraw_values_0")))) {
-			DBG("Tree has no specdraw" + std::to_string(osc) + " values, fallback to generation");
+//			DBG("Tree has no specdraw" + std::to_string(osc) + " values, fallback to generation");
 			writeDefaultSpecdrawValuesToTree(osc);
 		}
 	}
@@ -137,29 +140,30 @@ void OdinAudioProcessor::readPatch(const ValueTree &newState) {
 	}
 
 // CMDEBUG>
-// Read patch, Value tree
-    const ValueTree &midi_learn = newStateMigrated.getChildWithName("midi_learn");
-    for (int i = 0; i < m_value_tree_midi_learn.getNumProperties(); ++i) {
-        DBG("(midi_learn) " );
-        if (mod_tree.hasProperty(m_value_tree_midi_learn.getPropertyName(i))) {
-            m_value_tree_midi_learn.setProperty(m_value_tree_midi_learn.getPropertyName(i),
-                                         mod_tree.getProperty(m_value_tree_midi_learn.getPropertyName(i)),
-                                         nullptr);
-            m_value_tree_midi_learn.sendPropertyChangeMessage((m_value_tree_mod.getPropertyName(i)));
-            DBG("Non-audio property (midi_learn) " + m_value_tree_midi_learn.getPropertyName(i).toString().toStdString());
-        } else {
-            DBG("Didn't find non-audio property (midi_learn) " + m_value_tree_midi_learn.getPropertyName(i).toString().toStdString());
-        }
+    m_midi_control_param_map.clear();
+    m_value_tree.state.getChildWithName("midi_learn").removeAllProperties(nullptr);
+    const ValueTree &midi_learn_tree = newStateMigrated.getChildWithName("midi_learn");
+//    midi_learn_tree.getChildWithName("midi_learn").removeAllChildren(nullptr);
+
+    for (int i = 0; i < midi_learn_tree.getNumProperties(); ++i) {
+//        DBG("(******** Loading midi_learn ********)" );
+        String knob = midi_learn_tree.getPropertyName(i).toString();
+        int cc_num = midi_learn_tree.getProperty(knob);
+        m_value_tree.state.getChildWithName("midi_learn").setProperty(knob, cc_num, nullptr);
+
+        m_midi_control_param_map.emplace(
+                    (int)m_value_tree_midi_learn[m_value_tree_midi_learn.getPropertyName(i)],
+                m_value_tree.getParameter(m_value_tree_midi_learn.getPropertyName(i)));
     }
+
+    DBG(String(__FILE__)+":"+String(__LINE__)+": "+ newStateMigrated.getChildWithName("midi_learn").toXmlString() );
+    DBG(String(__FILE__)+":"+String(__LINE__)+": "+ m_value_tree.state.getChildWithName("midi_learn").toXmlString() );
+    DBG(String(__FILE__)+":"+String(__LINE__)+": "+ m_value_tree_midi_learn.getChildWithName("midi_learn").toXmlString() );
 // CMDEBUG<
 
 	for (int i = 0; i < newStateMigrated.getNumChildren(); ++i) {
 		// all children which are an audio param have two properties (name and value)
 		if (newStateMigrated.getChild(i).getNumProperties() == 2) {
-
-            DBG(newStateMigrated.getChild(i).getProperty(newStateMigrated.getChild(i).getPropertyName(0)).toString());
-            DBG(newStateMigrated.getChild(i).getProperty(newStateMigrated.getChild(i).getPropertyName(1)).toString());
-
 			String name =
 			    newStateMigrated.getChild(i).getProperty(newStateMigrated.getChild(i).getPropertyName(0)).toString();
 
@@ -168,8 +172,7 @@ void OdinAudioProcessor::readPatch(const ValueTree &newState) {
 				    name, newStateMigrated.getChild(i).getProperty(newStateMigrated.getChild(i).getPropertyName(1)));
 			}
 //            DBG("Value on tree is now: is now:" + m_value_tree.getParameterAsValue(name).getValue().toString());
-//            DBG("");
-		}
+        }
 	}
 
 	setMonoPolyLegato(VALUETREETOPLAYMODE((int)m_value_tree.state.getChildWithName("misc")["legato"]));

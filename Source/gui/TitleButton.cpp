@@ -14,18 +14,22 @@
 */
 
 #include "TitleButton.h"
-#include "../PluginProcessor.h"
+//#include "../PluginProcessor.h"
 
-TitleButton::TitleButton() : juce::Button("TitleButton") {
-	onClick = [](){
-		juce::URL url(TWW_HOMEPAGE_URL);
-		url.launchInDefaultBrowser();
+TitleButton::TitleButton() : juce::Button("TitleButton")
+{
+    onClick = [](){
+//		juce::URL url(TWW_HOMEPAGE_URL);
+//		url.launchInDefaultBrowser();
+//        clearMidiLearn();
 	};
 
 	setMouseCursor(juce::MouseCursor::StandardCursorType::PointingHandCursor);
 
-	setTooltip("Go to TheWaveWarden homepage");
+//	setTooltip("Go to TheWaveWarden homepage");
+//    setTooltip("Forget all midi learns");
 }
+
 
 void TitleButton::paintButton(Graphics &g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) {
 	if(shouldDrawButtonAsHighlighted)
@@ -39,3 +43,7 @@ void TitleButton::setGUIBig() {
 void TitleButton::setGUISmall() {
 	m_hover_image = ImageCache::getFromMemory(BinaryData::title_button_png, BinaryData::title_button_pngSize);
 }
+
+//void TitleButton::clearMidiLearn(){
+//    m_audio_processor.midiForgetAll();
+//}

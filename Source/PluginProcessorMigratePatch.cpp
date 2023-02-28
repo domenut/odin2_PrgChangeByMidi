@@ -71,7 +71,7 @@ void OdinAudioProcessor::migratePatch(ValueTree &p_patch) {
 				    "pitchbend_amount",
 				    p_patch.getChild(i).getProperty(p_patch.getChild(i).getPropertyName(1)),
 				    nullptr);
-			}
+            }
 		}
 	}
 }

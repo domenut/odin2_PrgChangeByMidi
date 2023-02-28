@@ -7,18 +7,21 @@
 // CMDEBUG>
 // Program Change
 
-void OdinAudioProcessor::selectBankOrCategory(int index){
-    if((index >= 0) && (index <= 63)){
-        selectCategory(index);
-    }
-    if((index >= 64) && (index <= 127)){
-        selectSoundbank(index - 64);
-    }
-}
+//void OdinAudioProcessor::selectBankOrCategory(int index){
+//    if((index >= 0) && (index <= 63)){
+//        selectCategory(index);
+//    }
+//    if((index >= 64) && (index <= 127)){
+//        selectSoundbank(index - 64);
+//    }
+//}
 
 void OdinAudioProcessor::selectProgram(int index){
+    if(current_bank == ""){
+        selectSoundbank(0);
+    }
     if(current_category == ""){
-        selectCategory(1);
+        selectCategory(0);
         category_change_dir = current_category ;
     }
     String wildcard = (String(index) + "_*.odin");
@@ -43,7 +46,7 @@ void OdinAudioProcessor::selectProgram(int index){
 
 void OdinAudioProcessor::selectCategory(int index){
     if(current_bank == ""){
-        selectSoundbank(1);
+        selectSoundbank(0);
     }
     String wildcard = (String(index) + "_*");
     File category_dir(DEFAULT_SOUNDBANK_LOCATION_STRING + File::getSeparatorString() +
@@ -55,8 +58,7 @@ void OdinAudioProcessor::selectCategory(int index){
 }
 
 void OdinAudioProcessor::selectSoundbank(int index){
-    String indxstr = String(index);
-    String wildcard = (indxstr + "_*");
+    String wildcard = (String(index) + "_*");
     File category_dir(DEFAULT_SOUNDBANK_LOCATION_STRING);
     Array<File> file_array = category_dir.findChildFiles(1, false, wildcard);
     current_bank = file_array[0].getFileName();

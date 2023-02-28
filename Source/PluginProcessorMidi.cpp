@@ -21,6 +21,7 @@
 
 // CMDEBUG>
 #define MIDI_CONTROLLER_NUMBER_BANK_SELECT 0
+#define MIDI_CONTROLLER_NUMBER_CATEGORY_SELECT 32
 // CMDEBUG<
 
 #define MIDI_CONTROLLER_NUMBER_BREATH 2
@@ -232,7 +233,9 @@ void OdinAudioProcessor::handleMidiMessage(const MidiMessage &p_midi_message ) {
 	} else if(p_midi_message.isController() && p_midi_message.getControllerNumber() == MIDI_CONTROLLER_NUMBER_BREATH) {
 		m_midi_breath = p_midi_message.getControllerValue() / 127.f;
     } else if(p_midi_message.isController() && p_midi_message.getControllerNumber() == MIDI_CONTROLLER_NUMBER_BANK_SELECT){
-        selectBankOrCategory(p_midi_message.getControllerValue());
+        selectSoundbank(p_midi_message.getControllerValue());
+    } else if(p_midi_message.isController() && p_midi_message.getControllerNumber() == MIDI_CONTROLLER_NUMBER_CATEGORY_SELECT){
+        selectCategory(p_midi_message.getControllerValue());
     } else if(p_midi_message.isProgramChange()) {
         selectProgram(p_midi_message.getProgramChangeNumber());
     }
@@ -288,6 +291,8 @@ void OdinAudioProcessor::handleMidiMessage(const MidiMessage &p_midi_message ) {
 }
 
 void OdinAudioProcessor::startMidiLearn(const String &p_parameter_ID, OdinMidiLearnBase *p_GUI_control) {
+    DBG(">>CMD>> " + String( 0 ) );
+
 	DBG("MIDI LEARN FOR PARAMETER " + p_parameter_ID + " WAS SIGNALED!");
 	if (m_midi_learn_parameter_active) {
 		m_midi_learn_control->stopMidiLearn();
@@ -296,6 +301,7 @@ void OdinAudioProcessor::startMidiLearn(const String &p_parameter_ID, OdinMidiLe
 	m_midi_learn_parameter_active = true;
 	m_midi_learn_control          = p_GUI_control;
 }
+
 void OdinAudioProcessor::midiForget(const String &p_parameter_ID, OdinMidiLearnBase *p_GUI_control) {
 	for (std::multimap<int, RangedAudioParameter *>::iterator iter = m_midi_control_param_map.begin();
 	     iter != m_midi_control_param_map.end();) {
@@ -320,7 +326,7 @@ void OdinAudioProcessor::midiForget(const String &p_parameter_ID, OdinMidiLearnB
 	int counter = 1;
 	DBG("=========");
 	for (auto const &control : m_midi_control_param_map) {
-		DBG(std::to_string(counter++) + ": " + control.second->paramID.toStdString());
+        DBG("PPMidi: " + std::to_string(counter++) + ": " + control.second->paramID.toStdString());
 	}
 	DBG("=========");
 #endif
@@ -343,3 +349,9 @@ void OdinAudioProcessor::allNotesOff() {
 	}
 	m_arpeggiator.endPlayingNotes();
 }
+
+void OdinAudioProcessor::midiForgetAll(){
+    m_midi_control_param_map.clear();
+}
+
+

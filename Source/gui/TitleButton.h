@@ -29,4 +29,8 @@ public:
   void setGUISmall();
 
   juce::Image m_hover_image;
+
+private:
+  void clearMidiLearn();
+
 };

@@ -85,6 +85,7 @@ public:
 	void handleMidiNoteOff(int p_midi_note);
 	void handleMidiNoteOn(int p_midi_note, int p_midi_velocity);
 	void allNotesOff();
+    void midiForgetAll();
 	void setMonoPolyLegato(PlayModes p_mode);
 	// this should be called when patches are loaded or playmode has changed
 	// .it doesn't change values but clears all buffers
@@ -116,7 +117,7 @@ public:
 private:
     // CMDEBUG> (in: MidiProgramChange.cpp)
     // These allow Midi Patch changes (hopefully)
-    void selectBankOrCategory(int index);
+//    void selectBankOrCategory(int index);
     String current_bank = "";
     String current_category = "";
     void selectProgram(int index);

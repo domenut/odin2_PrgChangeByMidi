@@ -651,7 +651,7 @@ PatchBrowser::~PatchBrowser() {
 
 
 // CMDEBUG> (Updat gui if shown, with Midi:program/bank/category changes)
-// Needs another way, as this changes all params twice! (Ok when headless)
+// TODO Needs another way, as this changes all params twice! (Ok when headless)
 void PatchBrowser::midiProgChangeTimerInit(){
     Timer::startTimer(20);
 }
@@ -687,7 +687,6 @@ void PatchBrowser::programChanger(){
     }
 }
 // CMDEBUG<
-
 
 void PatchBrowser::paint(Graphics &g) {
 	// g.fillAll(getLookAndFeel().findColour(ResizableWindow::backgroundColourId)); // clear the background
@@ -791,7 +790,7 @@ void PatchBrowser::loadPatchFromOpenedFileStream(juce::FileInputStream &p_file_s
 	m_value_tree.state.getChildWithName("misc").setProperty("arp_mod_selected", MATRIX_SECTION_INDEX_PRESETS, nullptr);
 
 	//note: 99% percent of patch-loading time is spent here:
-	forceValueTreeLambda();
+    forceValueTreeLambda();
 
 	//set the correct Version number again
 	m_value_tree.state.getChildWithName("misc").setProperty("version_minor", ODIN_MINOR_VERSION, nullptr);
@@ -803,7 +802,7 @@ void PatchBrowser::loadPatchFromOpenedFileStream(juce::FileInputStream &p_file_s
 	//	forceValueTreeLambda();
 //    DBG("<<<<<<<<<<<<<<< new value tree state? >>>>>>>>>>>>>");
 //    DBG(m_value_tree.state.toXmlString());
-//   DBG("<<<<<<<<<..... new value tree state? .....>>>>>>>>>>>");
+//    DBG("<<<<<<<<<..... new value tree state? .....>>>>>>>>>>>");
 }
 
 bool PatchBrowser::checkForBiggerVersion(FileInputStream &p_file_stream, std::string &p_version_string) {
@@ -819,8 +818,8 @@ bool PatchBrowser::checkForBiggerVersion(FileInputStream &p_file_stream, std::st
 	if (patch_version > ODIN_PATCH_MIGRATION_VERSION) {
 		p_version_string = "2." + std::to_string((int)value_tree_read.getChildWithName("misc")["version_minor"]) + "." +
 		                   std::to_string((int)value_tree_read.getChildWithName("misc")["version_patch"]);
-		DBG("Trying to load PMV " + std::to_string(patch_version) + ", current PMV is " +
-		    std::to_string(ODIN_PATCH_MIGRATION_VERSION));
+                            DBG("Trying to load PMV " + std::to_string(patch_version) + ", current PMV is " +
+                            std::to_string(ODIN_PATCH_MIGRATION_VERSION));
 		return true;
 	}
 	return false;
@@ -833,6 +832,7 @@ bool PatchBrowser::checkForSmallerVersion(FileInputStream &p_file_stream, std::s
 	if (patch_version < ODIN_PATCH_MIGRATION_VERSION) {
 		p_version_string = "2." + std::to_string((int)value_tree_read.getChildWithName("misc")["version_minor"]) + "." +
 		                   std::to_string((int)value_tree_read.getChildWithName("misc")["version_patch"]);
+                            DBG("Trying to load Smaller version");
 		return true;
 	}
 	return false;
@@ -846,7 +846,7 @@ void PatchBrowser::savePatchInOpenedFileStream(FileOutputStream &p_file_stream) 
 	//write patch name onto valuetree
 	m_value_tree.state.getChildWithName("misc").setProperty(
 	    "patch_name", p_file_stream.getFile().getFileNameWithoutExtension(), nullptr);
-	DBG(m_value_tree.state.getChildWithName("misc")["patch_name"].toString());
+    DBG("PatchBrowser:852: " + m_value_tree.state.getChildWithName("misc")["patch_name"].toString());
 
 	//make a deep copy and remove the midi_learn part and file name
 	ValueTree copy_with_removed_params = m_value_tree.state.createCopy();
@@ -891,10 +891,6 @@ void PatchBrowser::savePatchInOpenedFileStream(FileOutputStream &p_file_stream) 
 	//save load directory
 	//m_last_directory = file_to_write.getParentDirectory().getFullPathName();
 
-//    DBG("*#*#*#*#*# cpy with removed params #*#*#*#*#*#*");
-//	DBG(copy_with_removed_params.toXmlString());
-//    DBG("*#*#*#*#*# cpy with removed params #*#*#*#*#*#*");
-
 	m_value_tree.state.getChildWithName("misc").setProperty("current_patch_filename",
 	                                                        p_file_stream.getFile().getFileName(),
 	                                                        nullptr); //needed for up/down buttons in patch loading
@@ -902,13 +898,14 @@ void PatchBrowser::savePatchInOpenedFileStream(FileOutputStream &p_file_stream) 
 	    "current_patch_directory",
 	    p_file_stream.getFile().getParentDirectory().getFullPathName(),
 	    nullptr); //needed for up/down buttons in patch loading
-	DBG("set filename in valuetree: " +
-	    m_value_tree.state.getChildWithName("misc")["current_patch_filename"].toString());
-	DBG("set filepath in valuetree: " +
-	    m_value_tree.state.getChildWithName("misc")["current_patch_directory"].toString());
-    DBG("midi_learn in valuetree?: " +
-        m_value_tree.state.getChildWithName("midi_learn")["*"].toString());
-    DBG("midi_learn in valuetree?: " + String(m_value_tree.state.getChildWithName("midi_learn").getNumChildren() ) );
+
+//	DBG("set filename in valuetree: " +
+//	    m_value_tree.state.getChildWithName("misc")["current_patch_filename"].toString());
+//	DBG("set filepath in valuetree: " +
+//	    m_value_tree.state.getChildWithName("misc")["current_patch_directory"].toString());
+//    DBG("midi_learn in valuetree?: " +
+//        m_value_tree.state.getChildWithName("midi_learn")["*"].toString());
+//    DBG("midi_learn in valuetree?: " + String(m_value_tree.state.getChildWithName("midi_learn").getNumChildren() ) );
 }
 
 bool PatchBrowser::usesWavedraw(int p_osc) {

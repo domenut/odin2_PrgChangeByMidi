@@ -13,6 +13,10 @@
 ** GNU General Public License for more details.
 */
 
+// For IDE Only ->:
+
+// <- For IDE Only END
+
 #pragma once
 for (int osc = 0; osc < 3; ++osc) {
 	m_osc_oct[osc]            = m_value_tree.getRawParameterValue("osc" + std::to_string(osc + 1) + "_oct");
@@ -189,6 +193,7 @@ m_value_tree_lfo.addListener(&m_non_param_listener_lfo);
 m_value_tree_misc.addListener(&m_non_param_listener_misc);
 m_value_tree_mod.addListener(&m_non_param_listener_mod);
 m_value_tree_osc.addListener(&m_non_param_listener_osc);
+
 
 for (int osc = 0; osc < 3; ++osc) {
 	//osc pitch listener:

@@ -5,13 +5,15 @@ This fork to allow:
   Current config (testing usability)
   
   Bank changes:
-    Midi cc:0 , values 64 to 127 Select Soundbank folder (as seen on gui)
+    Midi cc:0 , values 0 to 127 Select Soundbank folder (as seen on gui)
     
   Category changes:
-    Midi cc:0 , values 0 to 63 Select category in current soundbank
+    Midi cc:32 , values 0 to 127 Select category in current soundbank
     
   Patch changes:
     Midi program-change values 0 to 127 Select patch in current category
+
+  Also adding midi-map per patch...
    
 Current caveats:
     1) Bank/Category/Patch names MUST start with number followed by an underscore for this to work.
