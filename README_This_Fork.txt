@@ -19,7 +19,7 @@ Current caveats:
     1) Bank/Category/Patch names MUST start with number followed by an underscore for this to work.
    
    eg: 3_ *        - [midi cc 0 , value 3] selects this soundbank. (Starts in bank named: "0_*")
-        0_ *       - [midi cc 0 , value 0 ] selects this category. (IN SELECTED SOUNDBANK!, Starts in category: "0_*")
+        0_ *       - [midi cc 32 , value 0 ] selects this category. (IN SELECTED SOUNDBANK!, Starts in category: "0_*")
           6_ *     - [midi program change value: 6]  selects this patch. (IN SELECTED CATEGORY!)
           
     2) Although it works, when gui is showing and reflecting changes, the parameters are being changed twice.
