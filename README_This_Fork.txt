@@ -18,12 +18,13 @@ This fork to allow:
 Current caveats:
     1) Bank/Category/Patch names MUST start with number followed by an underscore for this to work.
    
-   eg: 1_ *        - [midi cc 0 , value 64] selects this soundbank. (64 - 63 = 1_)
-        1_ *       - [midi cc 0 , value 1 ] selects this category. (IN SELECTED SOUNDBANK!)
-          6_ *     - [midi program change value: 6]  selects this patch. (IN SELECTED CATEGORY!) DO NOT SEND ZERO VALUE, only 1 to 127
+   eg: 3_ *        - [midi cc 0 , value 3] selects this soundbank. (Starts in bank named: "0_*")
+        0_ *       - [midi cc 0 , value 0 ] selects this category. (IN SELECTED SOUNDBANK!, Starts in category: "0_*")
+          6_ *     - [midi program change value: 6]  selects this patch. (IN SELECTED CATEGORY!)
           
-    2) Although it works, when gui is showing and reflecting changes, the parameters are being changed twice. ( need to go deeper to fix )
-       This problem goes away when running headless in carla.
+    2) Although it works, when gui is showing and reflecting changes, the parameters are being changed twice.
+            ( need to go deeper to fix )
+                This problem goes away when running headless in carla.
 
     3) I had to add: #include <utility>
         to top of file: ./libs/JUCELV2/modules/juce_gui_basics/windows/juce_ComponentPeer.h
