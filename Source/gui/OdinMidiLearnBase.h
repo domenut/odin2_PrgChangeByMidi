@@ -17,7 +17,10 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-class OdinMidiLearnBase {
+//#include "../PluginProcessor.h"
+
+class OdinMidiLearnBase{
+
 public:
 	virtual ~OdinMidiLearnBase() {
 	}
@@ -27,16 +30,25 @@ public:
 //        DBG("Set parameter ID in OdinKnob: " + p_ID);
 	}
 
-	virtual void setMidiControlActive() = 0;
+    virtual void setMidiControlActive() = 0;
 	virtual void stopMidiLearn()        = 0;
 
 	void disableMidiLearn() {
         m_midi_learn_possible = false;
 	}
 
+
 protected:
 	bool m_midi_learn_possible = true;
 	bool m_midi_learn          = false;
 	bool m_midi_control        = false;
+    bool m_midi_loaded_patch_control  = false;
 	String m_parameter_ID;
 };
+
+
+
+
+
+
+

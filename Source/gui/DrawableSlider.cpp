@@ -30,10 +30,13 @@ DrawableSlider::DrawableSlider() {
 	setVelocityModeParameters(1.0, 1, 0.0, true, ModifierKeys::shiftModifier);
 
 	setTextBoxStyle(NoTextBox, true, 0, 0);
+
+    midiLearnIndicateTimerInit();
 }
 
 DrawableSlider::~DrawableSlider() {
 	setLookAndFeel(nullptr);
+    Timer::stopTimer();
 }
 
 void DrawableSlider::paint(Graphics &g) {
@@ -53,16 +56,26 @@ void DrawableSlider::paint(Graphics &g) {
 		                       getLocalBounds().getHeight(),
 		                       5,
 		                       2); // draw an outline around the component
-	} else if (m_midi_control) {
+    } else if (m_midi_control && ! m_midi_loaded_patch_control) {
 		g.setColour(Colours::green);
 		g.drawRoundedRectangle(getLocalBounds().getX(),
 		                       getLocalBounds().getY(),
 		                       getLocalBounds().getWidth(),
 		                       getLocalBounds().getHeight(),
 		                       5,
-		                       2); // draw an outline around the component
+                               2); // draw an outline around the component
+    } else if (m_midi_loaded_patch_control) {
+        g.setColour(Colours::blue);
+        g.drawRoundedRectangle(getLocalBounds().getX(),
+                               getLocalBounds().getY(),
+                               getLocalBounds().getWidth(),
+                               getLocalBounds().getHeight(),
+                               5,
+                               2); // draw an outline around the component
 	}
 }
+
+
 
 void DrawableSlider::mouseDown(const MouseEvent &event) {
 	if (event.mods.isRightButtonDown() && m_midi_learn_possible) {
@@ -91,7 +104,9 @@ void DrawableSlider::mouseDown(const MouseEvent &event) {
 			} else if (menu == 3) {
 				m_processor->midiForget(m_parameter_ID, this);
 				m_midi_control = false;
-				repaint();
+                m_midi_loaded_patch_control = false;
+                m_processor->midi_learned.removeProperty(m_parameter_ID, nullptr);
+                repaint();
 			}
 		}
 		return;
@@ -104,3 +119,34 @@ String DrawableSlider::getTextFromValue(double value) {
 	//https://forum.juce.com/t/setnumdecimalplacestodisplay-not-behaving-solved/33686/2
 	return String(value, getNumDecimalPlacesToDisplay()) + getTextValueSuffix();
 }
+
+void DrawableSlider::midiLearnIndicateTimerInit(){
+    if(m_midi_learn_possible){
+    Timer::startTimer(2000);
+    }
+}
+
+// CMDEBUG>
+void DrawableSlider::timerCallback(){
+    if(m_parameter_ID == ""){
+        Timer::stopTimer();
+        return;
+    }
+    if(m_processor->midi_learned.hasProperty(m_parameter_ID)){
+        m_midi_loaded_patch_control = true;
+        repaint();
+    }else{
+        m_midi_loaded_patch_control = false;
+        if(m_processor->loaded_new_map){
+            m_midi_control = false;
+        }
+        repaint();
+    }
+}
+// CMDEBUG<
+
+
+
+
+
+

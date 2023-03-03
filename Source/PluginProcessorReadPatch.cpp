@@ -24,10 +24,6 @@ void OdinAudioProcessor::readPatch(const ValueTree &newState) {
 	//create deep copy for modification
 	auto newStateMigrated = newState.createCopy();
 
-//    DBG("(PP)ReadPatch:  27:  newStateMigrated Has midi map OK ");
-//    DBG(newStateMigrated.toXmlString());
-//    DBG("''''''''' newStateMigrated ''''''''''''");
-
     migratePatch(newStateMigrated);
 
 //avoid compiler warning unused variable
@@ -140,25 +136,32 @@ void OdinAudioProcessor::readPatch(const ValueTree &newState) {
 	}
 
 // CMDEBUG>
+//    m_value_tree.state.getChildWithName("midi_learn").removeAllProperties(nullptr);
     m_midi_control_param_map.clear();
-    m_value_tree.state.getChildWithName("midi_learn").removeAllProperties(nullptr);
+    midi_learned.removeAllProperties(nullptr);
+    midiForgetAll();
     const ValueTree &midi_learn_tree = newStateMigrated.getChildWithName("midi_learn");
+//    midi_learned = midi_learn_tree;
 //    midi_learn_tree.getChildWithName("midi_learn").removeAllChildren(nullptr);
 
-    for (int i = 0; i < midi_learn_tree.getNumProperties(); ++i) {
-//        DBG("(******** Loading midi_learn ********)" );
-        String knob = midi_learn_tree.getPropertyName(i).toString();
-        int cc_num = midi_learn_tree.getProperty(knob);
-        m_value_tree.state.getChildWithName("midi_learn").setProperty(knob, cc_num, nullptr);
+    m_value_tree_midi_learn = newStateMigrated.getChildWithName("midi_learn");
+    for (int i = 0; i < m_value_tree_midi_learn.getNumProperties(); ++i) {
+
+//        String knob_name = midi_learn_tree.getPropertyName(i).toString();
+//        int cc_num = midi_learn_tree.getProperty(knob_name);
+//        m_value_tree.state.getChildWithName("midi_learn").setProperty(knob_name, cc_num, nullptr);
 
         m_midi_control_param_map.emplace(
                     (int)m_value_tree_midi_learn[m_value_tree_midi_learn.getPropertyName(i)],
                 m_value_tree.getParameter(m_value_tree_midi_learn.getPropertyName(i)));
+        midi_learned = m_value_tree_midi_learn;
     }
+    loaded_new_map = true;
 
-    DBG(String(__FILE__)+":"+String(__LINE__)+": "+ newStateMigrated.getChildWithName("midi_learn").toXmlString() );
-    DBG(String(__FILE__)+":"+String(__LINE__)+": "+ m_value_tree.state.getChildWithName("midi_learn").toXmlString() );
-    DBG(String(__FILE__)+":"+String(__LINE__)+": "+ m_value_tree_midi_learn.getChildWithName("midi_learn").toXmlString() );
+
+//    DBG(String(__FILE__)+":"+String(__LINE__)+": "+ newStateMigrated.getChildWithName("midi_learn").toXmlString() );
+//    DBG(String(__FILE__)+":"+String(__LINE__)+": "+ m_value_tree.state.getChildWithName("midi_learn").toXmlString() );
+//    DBG(String(__FILE__)+":"+String(__LINE__)+": "+ m_value_tree_midi_learn.getChildWithName("midi_learn").toXmlString() );
 // CMDEBUG<
 
 	for (int i = 0; i < newStateMigrated.getNumChildren(); ++i) {

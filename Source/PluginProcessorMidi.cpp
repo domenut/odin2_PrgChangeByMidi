@@ -21,7 +21,7 @@
 
 // CMDEBUG>
 #define MIDI_CONTROLLER_NUMBER_BANK_SELECT 0
-#define MIDI_CONTROLLER_NUMBER_CATEGORY_SELECT 32
+//#define MIDI_CONTROLLER_NUMBER_CATEGORY_SELECT 32
 // CMDEBUG<
 
 #define MIDI_CONTROLLER_NUMBER_BREATH 2
@@ -233,9 +233,7 @@ void OdinAudioProcessor::handleMidiMessage(const MidiMessage &p_midi_message ) {
 	} else if(p_midi_message.isController() && p_midi_message.getControllerNumber() == MIDI_CONTROLLER_NUMBER_BREATH) {
 		m_midi_breath = p_midi_message.getControllerValue() / 127.f;
     } else if(p_midi_message.isController() && p_midi_message.getControllerNumber() == MIDI_CONTROLLER_NUMBER_BANK_SELECT){
-        selectSoundbank(p_midi_message.getControllerValue());
-    } else if(p_midi_message.isController() && p_midi_message.getControllerNumber() == MIDI_CONTROLLER_NUMBER_CATEGORY_SELECT){
-        selectCategory(p_midi_message.getControllerValue());
+        selectBankOrCategory(p_midi_message.getControllerValue());
     } else if(p_midi_message.isProgramChange()) {
         selectProgram(p_midi_message.getProgramChangeNumber());
     }
@@ -254,7 +252,8 @@ void OdinAudioProcessor::handleMidiMessage(const MidiMessage &p_midi_message ) {
 		if (m_midi_learn_parameter_active) {
 			m_midi_control_param_map.emplace(p_midi_message.getControllerNumber(),
 			                                 m_value_tree.getParameter(m_midi_learn_parameter_ID));
-			m_midi_learn_control->setMidiControlActive();
+            m_midi_learn_control->setMidiControlActive();
+//            m_midi_learn_control->setMidiPatchControlActive();
 			m_midi_learn_parameter_active = false;
 			m_midi_learn_control          = nullptr;
 			//add control to value tree
@@ -300,6 +299,7 @@ void OdinAudioProcessor::startMidiLearn(const String &p_parameter_ID, OdinMidiLe
 	m_midi_learn_parameter_ID     = p_parameter_ID;
 	m_midi_learn_parameter_active = true;
 	m_midi_learn_control          = p_GUI_control;
+    loaded_new_map = false;
 }
 
 void OdinAudioProcessor::midiForget(const String &p_parameter_ID, OdinMidiLearnBase *p_GUI_control) {
@@ -314,7 +314,7 @@ void OdinAudioProcessor::midiForget(const String &p_parameter_ID, OdinMidiLearnB
 				m_value_tree.state.getChildWithName("midi_learn").removeProperty(p_parameter_ID, nullptr);
 			}
 
-			DBG(m_value_tree.state.toXmlString());
+//			DBG(m_value_tree.state.toXmlString());
 
 #ifndef ODIN_DEBUG
 			return;
@@ -351,7 +351,16 @@ void OdinAudioProcessor::allNotesOff() {
 }
 
 void OdinAudioProcessor::midiForgetAll(){
-    m_midi_control_param_map.clear();
+    // m_midi_control_param_map.clear();
+
+    for (std::multimap<int, RangedAudioParameter *>::iterator iter = m_midi_control_param_map.begin();
+         iter != m_midi_control_param_map.end();) {
+        std::multimap<int, RangedAudioParameter *>::iterator erase_iter = iter++;
+        m_midi_control_param_map.erase(erase_iter);
+
+        // remove all controls from the list in valuetree
+        m_value_tree.state.getChildWithName("midi_learn").removeAllProperties(nullptr);
+    }
 }
 
 

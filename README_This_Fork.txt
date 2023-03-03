@@ -5,10 +5,10 @@ This fork to allow:
   Current config (testing usability)
   
   Bank changes:
-    Midi cc:0 , values 0 to 127 Select Soundbank folder (as seen on gui)
+    Midi cc:0 , values 64 to 127 Select Soundbank folder (selects bank '0_*' to '63_*' as seen on gui)
     
   Category changes:
-    Midi cc:32 , values 0 to 127 Select category in current soundbank
+    Midi cc:0 , values 0 to 63 Select category in current soundbank
     
   Patch changes:
     Midi program-change values 0 to 127 Select patch in current category
@@ -18,8 +18,8 @@ This fork to allow:
 Current caveats:
     1) Bank/Category/Patch names MUST start with number followed by an underscore for this to work.
    
-   eg: 3_ *        - [midi cc 0 , value 3] selects this soundbank. (Starts in bank named: "0_*")
-        0_ *       - [midi cc 32 , value 0 ] selects this category. (IN SELECTED SOUNDBANK!, Starts in category: "0_*")
+   eg: 3_ *        - [midi cc 0 , value 67] selects this soundbank. (Starts in bank named: "0_*")
+        0_ *       - [midi cc 0 , value 0 ] selects this category. (IN SELECTED SOUNDBANK!, Starts in category: "0_*")
           6_ *     - [midi program change value: 6]  selects this patch. (IN SELECTED CATEGORY!)
           
     2) Although it works, when gui is showing and reflecting changes, the parameters are being changed twice.

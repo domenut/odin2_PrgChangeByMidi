@@ -21,10 +21,20 @@
 
 class OdinAudioProcessor;
 
-class OdinButton : public DrawableButton, public OdinMidiLearnBase {
+class OdinButton : public DrawableButton, public OdinMidiLearnBase,
+                                          public Timer
+{
 public:
   OdinButton(const String &buttonName, ButtonStyle buttonStyle)
-      : DrawableButton(buttonName, buttonStyle) {}
+      : DrawableButton(buttonName, buttonStyle) {
+      // CMDEBUG>
+      midiLearnIndicateTimerInit();
+      // CMDEBUG<
+  }
+
+  ~OdinButton() {
+      Timer::stopTimer();
+  }
 
   void paint(juce::Graphics &g) override {
     SET_INTERPOLATION_QUALITY(g)
@@ -36,12 +46,18 @@ public:
                              getLocalBounds().getWidth(),
                              getLocalBounds().getHeight(), 5,
                              2); // draw an outline around the component
-    } else if (m_midi_control) {
+    } else if (m_midi_control && ! m_midi_loaded_patch_control) {
       g.setColour(Colours::green);
       g.drawRoundedRectangle(getLocalBounds().getX(), getLocalBounds().getY(),
                              getLocalBounds().getWidth(),
                              getLocalBounds().getHeight(), 5,
                              2); // draw an outline around the component
+    } else if (m_midi_loaded_patch_control) {
+        g.setColour(Colours::blue);
+        g.drawRoundedRectangle(getLocalBounds().getX(), getLocalBounds().getY(),
+                               getLocalBounds().getWidth(),
+                               getLocalBounds().getHeight(), 5,
+                               2); // draw an outline around the component
     }
   }
 
@@ -63,6 +79,12 @@ public:
   }
 
 private:
+
+  // CMDEBUG>
+  void midiLearnIndicateTimerInit();
+  void timerCallback() override ;
+  void midiLearnIndicator(bool set);
+  // CMDEBUG<
 
   static OdinAudioProcessor *m_processor;
 };

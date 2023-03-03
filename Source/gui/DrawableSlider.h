@@ -48,10 +48,12 @@ public:
 
 class OdinAudioProcessor;
 
-class DrawableSlider : public juce::Slider, public OdinMidiLearnBase {
+class DrawableSlider : public juce::Slider, public OdinMidiLearnBase,
+                                            public Timer
+{
 public:
-	DrawableSlider();
-	~DrawableSlider();
+    DrawableSlider();
+    ~DrawableSlider();
 
 
 	void setHandle(juce::Image p_handle){
@@ -111,6 +113,12 @@ private:
 	static OdinAudioProcessor *m_processor;
 	ADSRFeels m_feels;
 	juce::Image m_handle;
+
+    // CMDEBUG>
+    void midiLearnIndicateTimerInit();
+    void timerCallback() override ;
+    void midiLearnIndicator(bool set);
+    // CMDEBUG<
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DrawableSlider)
 };

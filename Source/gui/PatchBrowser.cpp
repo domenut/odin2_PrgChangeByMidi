@@ -647,6 +647,7 @@ PatchBrowser::PatchBrowser(OdinAudioProcessor &p_processor, AudioProcessorValueT
 }
 
 PatchBrowser::~PatchBrowser() {
+    Timer::stopTimer();
 }
 
 

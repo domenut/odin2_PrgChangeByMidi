@@ -1219,4 +1219,5 @@ void OdinAudioProcessorEditor::readOrCreateConfigFile(bool &p_GUI_big) {
 	ConfigFileManager config;
 	p_GUI_big = config.getOptionBigGUI();
 	config.saveDataToFile();
+    DBG(String(__FILE__)+":"+String(__LINE__));
 }

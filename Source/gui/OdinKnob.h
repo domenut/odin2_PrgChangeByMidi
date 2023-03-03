@@ -106,9 +106,11 @@ public:
 	}
 };
 
-class OdinKnob : public juce::Slider, public OdinMidiLearnBase {
+class OdinKnob : public juce::Slider, public OdinMidiLearnBase,
+                                      public Timer
+{
 public:
-	OdinKnob() {
+    OdinKnob(){
 		setLookAndFeel(&m_knob_feels);
 		setRange(0, 1);
 
@@ -117,10 +119,15 @@ public:
 		setVelocityModeParameters(1.0, 1, 0.0, true, ModifierKeys::shiftModifier);
 
 		setTooltip("henlo");
+
+        // CMDEBUG>
+        midiLearnIndicateTimerInit();
+        // CMDEBUG<
 	}
 
 	~OdinKnob() {
 		setLookAndFeel(nullptr);
+        Timer::stopTimer();
 	}
 	void setTextValueSuffix(const String &suffix) {
 		setNumDecimalPlacesToDisplay(3);
@@ -165,7 +172,7 @@ public:
 			                       getLocalBounds().getHeight() - m_midi_learn_bottom_offset,
 			                       5,
 			                       2); // draw an outline around the component
-		} else if (m_midi_control) {
+        } else if (m_midi_control && ! m_midi_loaded_patch_control) {
 			g.setColour(Colours::green);
 			g.drawRoundedRectangle(getLocalBounds().getX() + m_midi_learn_left_offset,
 			                       getLocalBounds().getY(),
@@ -173,6 +180,14 @@ public:
 			                       getLocalBounds().getHeight() - m_midi_learn_bottom_offset,
 			                       5,
 			                       2); // draw an outline around the component
+        } else if (m_midi_loaded_patch_control) {
+            g.setColour(Colours::blue);
+            g.drawRoundedRectangle(getLocalBounds().getX() + m_midi_learn_left_offset,
+                                   getLocalBounds().getY(),
+                                   getLocalBounds().getWidth() - m_midi_learn_left_offset,
+                                   getLocalBounds().getHeight() - m_midi_learn_bottom_offset,
+                                   5,
+                                   2); // draw an outline around the component
 		}
 	}
 
@@ -274,10 +289,19 @@ public:
 	}
 
 private:
+
+    // CMDEBUG>
+    void midiLearnIndicateTimerInit();
+    void timerCallback() override ;
+    void midiLearnIndicator(bool set);
+    // CMDEBUG<
+
+
 	int m_midi_learn_left_offset   = 0;
 	int m_midi_learn_bottom_offset = 0;
 
 	static OdinAudioProcessor *m_processor;
+
 	bool m_is_vertical = true;
 	int m_frames, m_width, m_height;
 	juce::Image m_filmstrip;
@@ -285,6 +309,7 @@ private:
 	KnobFeels m_knob_feels;
 
 	//Label m_label;
+
 };
 
 class DecibelKnob : public OdinKnob {

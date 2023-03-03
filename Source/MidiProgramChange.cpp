@@ -7,14 +7,14 @@
 // CMDEBUG>
 // Program Change
 
-//void OdinAudioProcessor::selectBankOrCategory(int index){
-//    if((index >= 0) && (index <= 63)){
-//        selectCategory(index);
-//    }
-//    if((index >= 64) && (index <= 127)){
-//        selectSoundbank(index - 64);
-//    }
-//}
+void OdinAudioProcessor::selectBankOrCategory(int index){
+    if((index >= 0) && (index <= 63)){
+        selectCategory(index);
+    }
+    if((index >= 64) && (index <= 127)){
+        selectSoundbank(index - 64);
+    }
+}
 
 void OdinAudioProcessor::selectProgram(int index){
     if(current_bank == ""){
@@ -45,6 +45,7 @@ void OdinAudioProcessor::selectProgram(int index){
 }
 
 void OdinAudioProcessor::selectCategory(int index){
+    DBG("selectCategory: Current = " + current_bank+" / "+ current_category);
     if(current_bank == ""){
         selectSoundbank(0);
     }
@@ -58,6 +59,7 @@ void OdinAudioProcessor::selectCategory(int index){
 }
 
 void OdinAudioProcessor::selectSoundbank(int index){
+    DBG("selectSoundbank: Current = " + current_bank+" / "+ current_category);
     String wildcard = (String(index) + "_*");
     File category_dir(DEFAULT_SOUNDBANK_LOCATION_STRING);
     Array<File> file_array = category_dir.findChildFiles(1, false, wildcard);
