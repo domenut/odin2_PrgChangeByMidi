@@ -191,6 +191,7 @@ target_sources(Odin2
 # ==================== Binary Files =======================
 juce_add_binary_data(Odin2_BinaryData
   SOURCES
+    "Graphics/applied/LineIn_backdrop.png"
     "Graphics/applied/BP12_backdrop.png"
     "Graphics/applied/BP24_backdrop.png"
     "Graphics/applied/HP12_backdrop.png"
@@ -547,6 +548,7 @@ juce_add_binary_data(Odin2_BinaryData
     "Graphics/cropped/wavedraw_knob_cropped.png"
     "Graphics/cropped/wavetable_cropped.png"
     "Graphics/cropped/wavetable_knob_cropped.png"
+    "Graphics_150/applied/LineIn_backdrop_150.png"
     "Graphics_150/applied/BP12_backdrop_150.png"
     "Graphics_150/applied/BP24_backdrop_150.png"
     "Graphics_150/applied/HP12_backdrop_150.png"

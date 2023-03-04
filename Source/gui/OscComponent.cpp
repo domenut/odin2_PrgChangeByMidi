@@ -941,11 +941,10 @@ void OscComponent::setOscType(int p_osc_type, bool p_force) {
 void OscComponent::setOscTypeAudioInput() {
     if (m_GUI_big) {
         m_background =
-            ImageCache::getFromMemory(BinaryData::filter3_bypass_150_png, BinaryData::filter3_bypass_150_pngSize);
+            ImageCache::getFromMemory(BinaryData::LineIn_backdrop_150_png, BinaryData::LineIn_backdrop_150_pngSize);
     } else {
-        m_background = ImageCache::getFromMemory(BinaryData::filter3_bypass_png, BinaryData::filter3_bypass_pngSize);
+        m_background = ImageCache::getFromMemory(BinaryData::LineIn_backdrop_png, BinaryData::LineIn_backdrop_pngSize);
     }
-//    showNoiseComponents();
 }
 
 void OscComponent::setOscTypeBypass() {

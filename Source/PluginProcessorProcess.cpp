@@ -216,7 +216,6 @@ void OdinAudioProcessor::processBlock(AudioBuffer<float> &buffer, MidiBuffer &mi
 						break;
                     case OSC_TYPE_AUDIO_INPUT:
                         m_osc_output[voice][osc] += inBuffer[sample];
-//                        m_osc_output[voice][osc] += m_voice[voice].audio_input_osc[osc].doAudio(inBuffer[sample]);
                         break;
 					default:
 						break;

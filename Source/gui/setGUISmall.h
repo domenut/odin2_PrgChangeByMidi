@@ -342,6 +342,7 @@ void OdinAudioProcessorEditor::setGUISmall() {
 	juce::Image bypass_fil3_plate =
 	    ImageCache::getFromMemory(BinaryData::filter3_bypass_png, BinaryData::filter3_bypass_pngSize);
 
+
 	juce::Image black_knob_small =
 	    ImageCache::getFromMemory(BinaryData::black_knob_very_small_png, BinaryData::black_knob_very_small_pngSize);
 
