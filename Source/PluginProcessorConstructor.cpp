@@ -18,7 +18,8 @@
 #include "PluginProcessor.h"
 
 OdinAudioProcessor::OdinAudioProcessor() :
-    AudioProcessor(BusesProperties().withOutput("Output", AudioChannelSet::stereo(), true)),
+    AudioProcessor(BusesProperties().withOutput("Output", AudioChannelSet::stereo(), true)
+                                    .withInput("Input", AudioChannelSet::stereo(), true)),
     m_value_tree(*this, nullptr, Identifier("Odin"),
 #include "AudioValueTree.h" //contains the definition of audiotree. WATCH CLOSELY: is IN m_value_tree constructor brackets
                  ),
@@ -148,7 +149,7 @@ OdinAudioProcessor::OdinAudioProcessor() :
 			m_voice[i].wavetable_osc[osc].setWavetableContainer(&m_WT_container);
 			m_voice[i].chiptune_osc[osc].setWavetableContainer(&m_WT_container);
 			m_voice[i].vector_osc[osc].setWavetableContainer(&m_WT_container);
-			m_voice[i].multi_osc[osc].setWavetableContainer(&m_WT_container);
+            m_voice[i].multi_osc[osc].setWavetableContainer(&m_WT_container);
 			m_voice[i].fm_osc[osc].setWavetableContainer(&m_WT_container);
 			m_voice[i].pm_osc[osc].setWavetableContainer(&m_WT_container);
 			m_voice[i].wavedraw_osc[osc].setWavetableContainer(&m_WT_container);

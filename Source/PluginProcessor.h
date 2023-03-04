@@ -150,7 +150,6 @@ private:
 	void treeValueChangedNonParamMisc(ValueTree &tree, const Identifier &identifier);
 	void treeValueChangedNonParamMod(ValueTree &tree, const Identifier &identifier);
 	void treeValueChangedNonParamOsc(ValueTree &tree, const Identifier &identifier);
-//    void treeValueChangedNonParamMidiLearn(ValueTree &tree, const Identifier &identifier);
 
 	void treeValueChangedOscPitch(const String &p_ID, float p_new_value);
 	void treeValueChangedOscAnalog(const String &p_ID, float p_new_value);

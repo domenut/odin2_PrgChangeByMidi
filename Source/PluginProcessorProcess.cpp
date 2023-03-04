@@ -34,7 +34,7 @@ void OdinAudioProcessor::processBlock(AudioBuffer<float> &buffer, MidiBuffer &mi
 	setBPM(m_BPM);
 
 	ScopedNoDenormals noDenormals;
-	//auto totalNumInputChannels  = getTotalNumInputChannels();
+    auto totalNumInputChannels  = getTotalNumInputChannels();
 	//auto totalNumOutputChannels = getTotalNumOutputChannels();
 
 	MidiMessage midi_message;
@@ -164,6 +164,7 @@ void OdinAudioProcessor::processBlock(AudioBuffer<float> &buffer, MidiBuffer &mi
 
 				//===== OSCS ======
 
+                auto *inBuffer = buffer.getReadPointer(0);
 				for (int osc = 0; osc < 3; ++osc) {
 
 					switch (m_osc_type[osc]) {
@@ -213,6 +214,10 @@ void OdinAudioProcessor::processBlock(AudioBuffer<float> &buffer, MidiBuffer &mi
 						m_voice[voice].specdraw_osc[osc].update();
 						m_osc_output[voice][osc] += m_voice[voice].specdraw_osc[osc].doOscillateWithSync();
 						break;
+                    case OSC_TYPE_AUDIO_INPUT:
+                        m_osc_output[voice][osc] += inBuffer[sample];
+//                        m_osc_output[voice][osc] += m_voice[voice].audio_input_osc[osc].doAudio(inBuffer[sample]);
+                        break;
 					default:
 						break;
 					}

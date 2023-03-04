@@ -135,6 +135,7 @@ OdinAudioProcessorEditor::OdinAudioProcessorEditor(OdinAudioProcessor &p_process
 	m_osc_dropdown_menu.addItem(OSC_TYPE_FM, "FM Oscillator");
 	m_osc_dropdown_menu.addItem(OSC_TYPE_PM, "PhaseMod Oscillator");
 	m_osc_dropdown_menu.addItem(OSC_TYPE_NOISE, "Noise Oscillator");
+    m_osc_dropdown_menu.addItem(OSC_TYPE_AUDIO_INPUT, "Audio Input");
 	m_osc_dropdown_menu.addSeparator();
 	m_osc_dropdown_menu.addItem(OSC_TYPE_WAVEDRAW, "Wavedraw Oscillator");
 	m_osc_dropdown_menu.addItem(OSC_TYPE_CHIPDRAW, "Chipdraw Oscillator");

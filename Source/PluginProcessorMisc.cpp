@@ -98,11 +98,6 @@ void OdinAudioProcessor::getStateInformation(MemoryBlock &destData) {
 	xml->addChildElement(kbm);
 
 	copyXmlToBinary(*xml, destData);
-
-    DBG("********** file saved by daw************");
-//    DBG(xml->toString());
-    DBG("========== file saved by daw ============");
-    DBG("");
 }
 
 //this is called when DAW restores a file
@@ -115,11 +110,6 @@ void OdinAudioProcessor::setStateInformation(const void *data, int sizeInBytes) 
 
 	std::unique_ptr<XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
 	if (xmlState.get() != nullptr) {
-
-        DBG("********** file restored by daw ************");
-//        DBG(xmlState->toString());
-        DBG("========== file restored by daw ============");
-        DBG("");
 
 		//read tunings and remove them from xmltree:
 		Tunings::Scale scl           = Tunings::evenTemperament12NoteScale();

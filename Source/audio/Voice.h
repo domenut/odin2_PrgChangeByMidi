@@ -36,6 +36,7 @@
 #include "Oscillators/VectorOscillator.h"
 #include "Oscillators/WavetableOsc2D.h"
 #include "ADSR.h"
+#include "Inputs/AudioInput.h"
 
 #include <cstdlib>
 
@@ -557,6 +558,7 @@ struct Voice {
 			specdraw_osc[osc].setSampleRate(p_samplerate);
 			chipdraw_osc[osc].setSampleRate(p_samplerate);
 			lfo[osc].setSampleRate(p_samplerate);
+            audio_input_osc[osc].setSampleRate(p_samplerate);
 		}
 	}
 
@@ -590,6 +592,7 @@ struct Voice {
 	WavetableOsc1D wavedraw_osc[3];
 	WavetableOsc1D chipdraw_osc[3];
 	WavetableOsc1D specdraw_osc[3];
+    AudioInput audio_input_osc[3];
 
 	// filter
 	LadderFilter ladder_filter[2];

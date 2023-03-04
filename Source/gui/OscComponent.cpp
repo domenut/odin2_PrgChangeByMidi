@@ -928,14 +928,28 @@ void OscComponent::setOscType(int p_osc_type, bool p_force) {
 	case OSC_TYPE_SPECDRAW:
 		setOscTypeSpecdraw();
 		break;
+    case OSC_TYPE_AUDIO_INPUT:
+        setOscTypeAudioInput();
+        break;
 	default:
 		setOscTypeBypass();
 		break;
 	}
 	repaint();
 }
+
+void OscComponent::setOscTypeAudioInput() {
+    if (m_GUI_big) {
+        m_background =
+            ImageCache::getFromMemory(BinaryData::filter3_bypass_150_png, BinaryData::filter3_bypass_150_pngSize);
+    } else {
+        m_background = ImageCache::getFromMemory(BinaryData::filter3_bypass_png, BinaryData::filter3_bypass_pngSize);
+    }
+//    showNoiseComponents();
+}
+
 void OscComponent::setOscTypeBypass() {
-	m_background = m_background_bypass;
+    m_background = m_background_bypass;
 }
 
 void OscComponent::setOscTypeAnalog() {
@@ -947,6 +961,7 @@ void OscComponent::setOscTypeAnalog() {
 	}
 	showAnalogComponents();
 }
+
 void OscComponent::setOscTypeChiptune() {
 	if (m_GUI_big) {
 		m_background =
@@ -1016,7 +1031,7 @@ void OscComponent::setOscTypeNoise() {
 	} else {
 		m_background = ImageCache::getFromMemory(BinaryData::noise_backdrop_png, BinaryData::noise_backdrop_pngSize);
 	}
-	showNoiseComponents();
+    showNoiseComponents();
 }
 
 void OscComponent::setOscTypeVector() {

@@ -185,6 +185,7 @@ target_sources(Odin2
     "Source/gui/WaveformSelectorComponent.cpp"
     "Source/gui/XYPadComponent.cpp"
     "Source/gui/XYSectionComponent.cpp"
+    "Source/audio/Inputs/AudioInput.cpp"
 )
 
 # ==================== Binary Files =======================
