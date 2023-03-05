@@ -59,7 +59,8 @@ void OdinAudioProcessor::releaseResources() {
 bool OdinAudioProcessor::isBusesLayoutSupported(const BusesLayout &layouts) const {
 
 	//only support stereo output
-	if (layouts.getMainOutputChannelSet() != AudioChannelSet::stereo())
+    if (layouts.getMainOutputChannelSet() != AudioChannelSet::stereo()
+     || layouts.getMainInputChannelSet() != AudioChannelSet::stereo() )
 		return false;
 
 	return true;

@@ -34,7 +34,7 @@ void OdinAudioProcessor::processBlock(AudioBuffer<float> &buffer, MidiBuffer &mi
 	setBPM(m_BPM);
 
 	ScopedNoDenormals noDenormals;
-    auto totalNumInputChannels  = getTotalNumInputChannels();
+//    auto totalNumInputChannels  = getTotalNumInputChannels();
 	//auto totalNumOutputChannels = getTotalNumOutputChannels();
 
 	MidiMessage midi_message;
@@ -44,10 +44,16 @@ void OdinAudioProcessor::processBlock(AudioBuffer<float> &buffer, MidiBuffer &mi
 	if (midi_message_remaining) {
 		midi_message        = (*midi_iterator).getMessage();
 		midi_message_sample = (*midi_iterator).samplePosition;
-	}
+    }
+
+    auto *inBuffer = buffer.getReadPointer(0);
+    float input_sample;
 
 	// loop over samples
 	for (int sample = 0; sample < buffer.getNumSamples(); ++sample) {
+
+    // do input
+        input_sample = inBuffer[sample];
 
 		// do Arpeggiator
 		if (m_arpeggiator_on) {
@@ -164,11 +170,11 @@ void OdinAudioProcessor::processBlock(AudioBuffer<float> &buffer, MidiBuffer &mi
 
 				//===== OSCS ======
 
-                auto *inBuffer = buffer.getReadPointer(0);
-				for (int osc = 0; osc < 3; ++osc) {
+
+                for (int osc = 0; osc < 3; ++osc) {
 
 					switch (m_osc_type[osc]) {
-					case OSC_TYPE_ANALOG:
+                    case OSC_TYPE_ANALOG:
 						m_voice[voice].analog_osc[osc].update();
 						m_osc_output[voice][osc] += m_voice[voice].analog_osc[osc].doOscillateWithSync();
 						break;
@@ -215,7 +221,8 @@ void OdinAudioProcessor::processBlock(AudioBuffer<float> &buffer, MidiBuffer &mi
 						m_osc_output[voice][osc] += m_voice[voice].specdraw_osc[osc].doOscillateWithSync();
 						break;
                     case OSC_TYPE_AUDIO_INPUT:
-                        m_osc_output[voice][osc] += inBuffer[sample];
+//                        DBG("Sample: " + String(input_sample) );
+                        m_osc_output[voice][osc] += input_sample;
                         break;
 					default:
 						break;
@@ -410,7 +417,6 @@ void OdinAudioProcessor::processBlock(AudioBuffer<float> &buffer, MidiBuffer &mi
 			case FILTER_TYPE_RINGMOD:
 				m_ring_mod[channel].setBaseFrequency(m_fil_freq_smooth[2]);
 				m_ring_mod[channel].setGlideTargetFrequency(m_fil_freq_smooth[2]);
-
 				m_ring_mod[channel].update();
 				stereo_signal[channel] = m_ring_mod[channel].doRingModulator(stereo_signal[channel]);
 				break;
@@ -500,7 +506,9 @@ void OdinAudioProcessor::processBlock(AudioBuffer<float> &buffer, MidiBuffer &mi
 		auto *channelData   = buffer.getWritePointer(0);
 		channelData[sample] = stereo_signal[0] * master_vol_modded;
 		channelData         = buffer.getWritePointer(1);
-		channelData[sample] = stereo_signal[1] * master_vol_modded;
+        channelData[sample] = stereo_signal[1] * master_vol_modded;
+//        channelData[sample] = input_sample;
+//        DBG("Sample: " + String(input_sample) );
 
 	} // sample loop
 }
