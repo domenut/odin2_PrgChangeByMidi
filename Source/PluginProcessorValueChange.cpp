@@ -15,6 +15,11 @@
 
 //#define DEBUG_VARIABLES
 
+#define EDITING_IN_IDE 1
+#if EDITING_IN_IDE
+#include "PluginProcessor.h"
+#endif
+
 float valueToDenominator(int p_value) {
 	switch (p_value) {
 	case 0:
@@ -434,6 +439,39 @@ void OdinAudioProcessor::treeValueChangedOscNoise(const String &p_ID, float p_ne
 			m_voice[voice].noise_osc[2].setLPFreq(p_new_value);
 		}
 	}
+}
+
+void OdinAudioProcessor::treeValueChangedOscAudioInput(const String &p_ID, float p_new_value) {
+#ifdef DEBUG_VARIABLES
+    DBG("osc_audio_input: " + p_ID + ": " + std::to_string(p_new_value));
+#endif
+    StringRef id = StringRef(p_ID);
+
+    if (id == m_osc1_hp_identifier) {
+        for (int voice = 0; voice < VOICES; ++voice) {
+            m_voice[voice].audio_input_osc[0].setHPFreq(p_new_value);
+        }
+    } else if (id == m_osc2_hp_identifier) {
+        for (int voice = 0; voice < VOICES; ++voice) {
+            m_voice[voice].audio_input_osc[1].setHPFreq(p_new_value);
+        }
+    } else if (id == m_osc3_hp_identifier) {
+        for (int voice = 0; voice < VOICES; ++voice) {
+            m_voice[voice].audio_input_osc[2].setHPFreq(p_new_value);
+        }
+    } else if (id == m_osc1_lp_identifier) {
+        for (int voice = 0; voice < VOICES; ++voice) {
+            m_voice[voice].audio_input_osc[0].setLPFreq(p_new_value);
+        }
+    } else if (id == m_osc2_lp_identifier) {
+        for (int voice = 0; voice < VOICES; ++voice) {
+            m_voice[voice].audio_input_osc[1].setLPFreq(p_new_value);
+        }
+    } else if (id == m_osc3_lp_identifier) {
+        for (int voice = 0; voice < VOICES; ++voice) {
+            m_voice[voice].audio_input_osc[2].setLPFreq(p_new_value);
+        }
+    }
 }
 
 void OdinAudioProcessor::treeValueChangedFilTop(const String &p_ID, float p_new_value) {

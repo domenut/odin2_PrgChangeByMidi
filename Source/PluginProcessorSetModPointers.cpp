@@ -165,6 +165,11 @@ void OdinAudioProcessor::setModulationPointers() {
 
 			m_voice[voice].noise_osc[osc].setHPModPointer(&(m_mod_destinations.voice[voice].osc[osc].hp_freq));
 			m_voice[voice].noise_osc[osc].setLPModPointer(&(m_mod_destinations.voice[voice].osc[osc].lp_freq));
+
+            m_voice[voice].audio_input_osc[osc].setHPModPointer(&(m_mod_destinations.voice[voice].osc[osc].hp_freq));
+            m_voice[voice].audio_input_osc[osc].setLPModPointer(&(m_mod_destinations.voice[voice].osc[osc].lp_freq));
+
+
 		}
 		for (int fil = 0; fil < 2; ++fil) {
 			m_voice[voice].ladder_filter[fil].setFreqModPointer(&(m_mod_destinations.voice[voice].filter[fil].freq));

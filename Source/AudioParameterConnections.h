@@ -243,6 +243,10 @@ for (int osc = 0; osc < 3; ++osc) {
 	//osc noiselistener
 	m_value_tree.addParameterListener("osc" + std::to_string(osc + 1) + "_lp", &m_tree_listener_osc_noise);
 	m_value_tree.addParameterListener("osc" + std::to_string(osc + 1) + "_hp", &m_tree_listener_osc_noise);
+
+    //osc audioInputlistener
+    m_value_tree.addParameterListener("osc" + std::to_string(osc + 1) + "_lp", &m_tree_listener_osc_audio_input);
+    m_value_tree.addParameterListener("osc" + std::to_string(osc + 1) + "_hp", &m_tree_listener_osc_audio_input);
 }
 
 for (int fil = 0; fil < 3; ++fil) {

@@ -56,7 +56,8 @@ public:
 	bool isBusesLayoutSupported(const BusesLayout &layouts) const override;
 #endif
 
-	void processBlock(AudioBuffer<float> &, MidiBuffer &) override;
+    void processBlock(AudioBuffer<float> &, MidiBuffer &) override;
+
 	AudioProcessorEditor *createEditor() override;
 	bool hasEditor() const override;
 	void onEditorDestruction();
@@ -160,6 +161,7 @@ private:
 	void treeValueChangedOscArp(const String &p_ID, float p_new_value);
 	void treeValueChangedOscFM(const String &p_ID, float p_new_value);
 	void treeValueChangedOscNoise(const String &p_ID, float p_new_value);
+    void treeValueChangedOscAudioInput(const String &p_ID, float p_new_value);
 	void treeValueChangedFilTop(const String &p_ID, float p_new_value);
 	void treeValueChangedFilCenter(const String &p_ID, float p_new_value);
 	void treeValueChangedFilMisc(const String &p_ID, float p_new_value);
@@ -193,6 +195,7 @@ private:
 	OdinTreeListener m_tree_listener_osc_arp;
 	OdinTreeListener m_tree_listener_osc_fm;
 	OdinTreeListener m_tree_listener_osc_noise;
+    OdinTreeListener m_tree_listener_osc_audio_input;
 	OdinTreeListener m_tree_listener_fil_top;
 	OdinTreeListener m_tree_listener_fil_center;
 	OdinTreeListener m_tree_listener_fil_misc;

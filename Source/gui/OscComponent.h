@@ -169,9 +169,9 @@ public:
   }
   int getOscType() { return m_osc_type; }
   void setOscType(int p_osc_type, bool p_force = true);
-  void setOscTypeAudioInput();
   void setOscTypeBypass();
   void setOscTypeAnalog();
+  void setOscTypeAudioInput();
   void setOscTypeChiptune();
   void setOscTypeFM();
   void setOscTypePM();
@@ -190,6 +190,7 @@ public:
   void showVolComponent();
   void showPitchComponents();
   void showAnalogComponents();
+  void showAudioInputComponents();
   void showChiptuneComponents();
   void showFMComponents();
   void showPMComponents();

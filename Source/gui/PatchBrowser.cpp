@@ -654,11 +654,11 @@ PatchBrowser::~PatchBrowser() {
 // CMDEBUG> (Updat gui if shown, with Midi:program/bank/category changes)
 // TODO Needs another way, as this changes all params twice! (Ok when headless)
 void PatchBrowser::midiProgChangeTimerInit(){
-    Timer::startTimer(20);
+    Timer::startTimer(60);
 }
 void PatchBrowser::timerCallback(){
     if (m_audio_processor.program_change_trigger == 1){
-        programChanger();
+        updateGuiAfterMidiPatchChange();
     }else if (m_audio_processor.program_change_trigger == 2){
         categoryChanger();
     }else if( m_audio_processor.program_change_trigger == 3){
@@ -678,14 +678,19 @@ void PatchBrowser::categoryChanger(){
     m_category_selector.getSubDirectoryAndHighlightItFromName(m_patch_selector.getDirectory());
 }
 
-void PatchBrowser::programChanger(){
-    File file_to_open(m_audio_processor.program_change_path);
-    FileInputStream file_stream(file_to_open);
-    if (file_stream.openedOk()) {
-        loadPatchFromOpenedFileStream(file_stream);
-        m_category_selector.getSubDirectoryAndHighlightItFromName(m_patch_selector.getDirectory());
-        m_patch_selector.getSubDirectoryAndHighlightItFromName(m_audio_processor.program_change_path);
-    }
+void PatchBrowser::updateGuiAfterMidiPatchChange() {
+
+    m_soundbank_selector.passValueToPatchBrowser(m_audio_processor.bank_change_dir);
+    m_soundbank_selector.getSubDirectoryAndHighlightItFromName(m_category_selector.getDirectory());
+
+    m_category_selector.passValueToPatchBrowser(m_audio_processor.category_change_dir);
+    m_category_selector.getSubDirectoryAndHighlightItFromName(m_patch_selector.getDirectory());
+
+    m_category_selector.getSubDirectoryAndHighlightItFromName(m_patch_selector.getDirectory());
+    m_patch_selector.getSubDirectoryAndHighlightItFromName(m_audio_processor.program_change_path);
+
+    forceValueTreeLambda();
+//    repaint();
 }
 // CMDEBUG<
 

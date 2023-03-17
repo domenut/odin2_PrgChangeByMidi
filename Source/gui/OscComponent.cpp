@@ -945,6 +945,7 @@ void OscComponent::setOscTypeAudioInput() {
     } else {
         m_background = ImageCache::getFromMemory(BinaryData::LineIn_backdrop_png, BinaryData::LineIn_backdrop_pngSize);
     }
+    showAudioInputComponents();
 }
 
 void OscComponent::setOscTypeBypass() {
@@ -1256,6 +1257,12 @@ void OscComponent::showNoiseComponents() {
 	showVolComponent();
 	m_lp.setVisible(true);
 	m_hp.setVisible(true);
+}
+
+void OscComponent::showAudioInputComponents() {
+    showVolComponent();
+    m_lp.setVisible(true);
+    m_hp.setVisible(true);
 }
 
 void OscComponent::createWavedrawTables() {

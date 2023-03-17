@@ -18,8 +18,8 @@
 #include "PluginProcessor.h"
 
 OdinAudioProcessor::OdinAudioProcessor() :
-    AudioProcessor(BusesProperties().withOutput("Output", AudioChannelSet::stereo(), true)
-                                    .withInput("Input", AudioChannelSet::stereo(), true)),
+    AudioProcessor(BusesProperties().withInput ("Input" , AudioChannelSet::stereo(), true)
+                                    .withOutput("Output", AudioChannelSet::stereo(), true)),
     m_value_tree(*this, nullptr, Identifier("Odin"),
 #include "AudioValueTree.h" //contains the definition of audiotree. WATCH CLOSELY: is IN m_value_tree constructor brackets
                  ),
@@ -64,8 +64,13 @@ OdinAudioProcessor::OdinAudioProcessor() :
 		treeValueChangedOscFM(p_ID, p_new_value);
 	};
 	m_tree_listener_osc_noise.onValueChange = [&](const String &p_ID, float p_new_value) {
+        DBG("PPConstructor, m_tree_listener_osc_noise: " + String(p_ID) );
 		treeValueChangedOscNoise(p_ID, p_new_value);
 	};
+    m_tree_listener_osc_audio_input.onValueChange = [&](const String &p_ID, float p_new_value) {
+        DBG("PPConstructor, m_tree_listener_osc_audio_input: " + String(p_ID) );
+        treeValueChangedOscAudioInput(p_ID, p_new_value);
+    };
 	m_tree_listener_fil_top.onValueChange = [&](const String &p_ID, float p_new_value) {
 		treeValueChangedFilTop(p_ID, p_new_value);
 	};

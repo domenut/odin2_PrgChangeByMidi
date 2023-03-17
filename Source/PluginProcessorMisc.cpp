@@ -22,11 +22,11 @@ const String OdinAudioProcessor::getName() const {
 }
 
 double OdinAudioProcessor::getTailLengthSeconds() const {
-	return 0.0;
+    return 0.0;
 }
 
 int OdinAudioProcessor::getNumPrograms() {
-	return 1; // NB: some hosts don't cope very well if you tell them there are 0
+    return 1; // NB: some hosts don't cope very well if you tell them there are 0
 	          // programs, so this should be at least 1, even if you're not really
 	          // implementing programs.
 }
@@ -36,6 +36,7 @@ int OdinAudioProcessor::getCurrentProgram() {
 }
 
 void OdinAudioProcessor::setCurrentProgram(int index) {
+    DBG("Trying To Set Program. No: " + String(index));
 }
 
 const String OdinAudioProcessor::getProgramName(int index) {
@@ -58,12 +59,37 @@ void OdinAudioProcessor::releaseResources() {
 #ifndef JucePlugin_PreferredChannelConfigurations
 bool OdinAudioProcessor::isBusesLayoutSupported(const BusesLayout &layouts) const {
 
-	//only support stereo output
-    if (layouts.getMainOutputChannelSet() != AudioChannelSet::stereo()
-     || layouts.getMainInputChannelSet() != AudioChannelSet::stereo() )
-		return false;
+//    const auto& mainOutput = layouts.getMainOutputChannelSet();
+//    const auto& mainInput  = layouts.getMainInputChannelSet();
 
-	return true;
+//    if (! mainInput.isDisabled() && mainInput != mainOutput)
+//        return false;
+
+//    if (mainOutput.size() > 2)
+//        return false;
+
+//    return true;
+
+    if (layouts.getMainInputChannelSet()  == juce::AudioChannelSet::disabled()
+     || layouts.getMainOutputChannelSet() == juce::AudioChannelSet::disabled())
+        return false;
+
+    if (layouts.getMainOutputChannelSet().size() > 2)
+        return false;
+
+    return layouts.getMainInputChannelSet() == layouts.getMainOutputChannelSet();
+
+//    const auto& mainInLayout  = layouts.getChannelSet (true,  0);
+//    const auto& mainOutLayout = layouts.getChannelSet (false, 0);
+//    return (mainInLayout == mainOutLayout && (! mainInLayout.isDisabled()));
+
+
+	//only support stereo output
+//    if (layouts.getMainOutputChannelSet() != AudioChannelSet::stereo()
+//     || layouts.getMainInputChannelSet() != AudioChannelSet::stereo() )
+//		return false;
+
+//	return true;
 }
 #endif
 

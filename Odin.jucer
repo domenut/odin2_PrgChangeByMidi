@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="vpwEHn" name="Odin2" projectType="audioplug" pluginFormats="buildAU,buildStandalone,buildVST3"
+<JUCERPROJECT id="vpwEHn" name="Odin2" projectType="audioplug" pluginFormats="buildAU,buildLV2,buildStandalone,buildVST3"
               version="2.3.4" companyName="TheWaveWarden" companyWebsite="www.thewavewarden.com"
               pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
-              pluginManufacturerCode="WAWA" pluginCode="ODIN" pluginChannelConfigs="{0,2}"
-              displaySplashScreen="0" jucerFormatVersion="1" companyEmail="info@thewavewarden.com"
+              pluginManufacturerCode="WAWA" pluginCode="ODIN" displaySplashScreen="0"
+              jucerFormatVersion="1" companyEmail="info@thewavewarden.com"
               postExportShellCommandWin="powershell.exe -command &quot;#define GIT_COMMIT_ID &#96;&quot;$(git --git-dir %%1%%\.git rev-parse --short HEAD)&#96;&quot;&quot; &gt; %%1%%\Source\GitCommitId.h"
-              postExportShellCommandPosix="echo &quot;#define GIT_COMMIT_ID \&quot;$(git --git-dir %%1%%/.git rev-parse --short HEAD)\&quot;&quot; &gt; %%1%%/Source/GitCommitId.h">
+              postExportShellCommandPosix="echo &quot;#define GIT_COMMIT_ID \&quot;$(git --git-dir %%1%%/.git rev-parse --short HEAD)\&quot;&quot; &gt; %%1%%/Source/GitCommitId.h"
+              lv2Uri="www.cmd.com/ODIN2-live">
   <MAINGROUP id="Tn76b3" name="Odin2">
     <GROUP id="{4BDA71D1-AEF1-9B93-669C-B796828B51C7}" name="FactoryPresets">
       <FILE id="OvtiZa" name="666-001-Organ.odin" compile="0" resource="1"
@@ -2224,8 +2225,10 @@
                 file="Source/audio/Filters/DCBlockingFilter.h"/>
           <FILE id="JHfaPb" name="DiodeFilter.cpp" compile="1" resource="0" file="Source/audio/Filters/DiodeFilter.cpp"/>
           <FILE id="FSMHAJ" name="DiodeFilter.h" compile="0" resource="0" file="Source/audio/Filters/DiodeFilter.h"/>
-          <FILE id="gg9mto" name="OdinFilterBase.cpp" compile="1" resource="0" file="Source/audio/Filters/OdinFilterBase.cpp"/>
-          <FILE id="IvlOHH" name="OdinFilterBase.h" compile="0" resource="0" file="Source/audio/Filters/OdinFilterBase.h"/>
+          <FILE id="gg9mto" name="OdinFilterBase.cpp" compile="1" resource="0"
+                file="Source/audio/Filters/OdinFilterBase.cpp"/>
+          <FILE id="IvlOHH" name="OdinFilterBase.h" compile="0" resource="0"
+                file="Source/audio/Filters/OdinFilterBase.h"/>
           <FILE id="PCXPLn" name="FormantFilter.cpp" compile="1" resource="0"
                 file="Source/audio/Filters/FormantFilter.cpp"/>
           <FILE id="RcryvM" name="FormantFilter.h" compile="0" resource="0" file="Source/audio/Filters/FormantFilter.h"/>
@@ -2259,34 +2262,8 @@
     <FILE id="HQUFcv" name="init_patch.odin" compile="0" resource="1" file="init_patch.odin"/>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <XCODE_MAC targetFolder="Builds/MacOSX" extraCompilerFlags="-Wno-shorten-64-to-32 -Wno-reorder"
-               extraDefs="JUCE_MODAL_LOOPS_PERMITTED">
-      <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" defines="ODIN_DEBUG&#10;ODIN_MAC" targetName="Odin2DEBUG"
-                       headerPath="../../libs/tuning-library&#10;"/>
-        <CONFIGURATION isDebug="0" name="Release" defines="ODIN_RELEASE&#10;ODIN_MAC"
-                       headerPath="../../libs/tuning-library"/>
-      </CONFIGURATIONS>
-      <MODULEPATHS>
-        <MODULEPATH id="juce_audio_basics" path="../../JUCE/modules"/>
-        <MODULEPATH id="juce_audio_devices" path="../../JUCE/modules"/>
-        <MODULEPATH id="juce_audio_formats" path="../../JUCE/modules"/>
-        <MODULEPATH id="juce_audio_plugin_client" path="../../JUCE/modules"/>
-        <MODULEPATH id="juce_audio_processors" path="../../JUCE/modules"/>
-        <MODULEPATH id="juce_audio_utils" path="../../JUCE/modules"/>
-        <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
-        <MODULEPATH id="juce_cryptography" path="../../JUCE/modules"/>
-        <MODULEPATH id="juce_data_structures" path="../../JUCE/modules"/>
-        <MODULEPATH id="juce_events" path="../../JUCE/modules"/>
-        <MODULEPATH id="juce_graphics" path="../../JUCE/modules"/>
-        <MODULEPATH id="juce_gui_basics" path="../../JUCE/modules"/>
-        <MODULEPATH id="juce_gui_extra" path="../../JUCE/modules"/>
-        <MODULEPATH id="juce_opengl" path="../../JUCE/modules"/>
-        <MODULEPATH id="juce_dsp" path="../JUCE/modules"/>
-      </MODULEPATHS>
-    </XCODE_MAC>
     <LINUX_MAKE targetFolder="Builds/LinuxMakefile" extraCompilerFlags="-msse2"
-                userNotes="-Wconversion" extraDefs="JUCE_MODAL_LOOPS_PERMITTED">
+                userNotes="-Wconversion" extraDefs="JUCE_MODAL_LOOPS_PERMITTED&#10;JUCE_JACK_CLIENT_NAME=&quot;ODIN-live&quot;">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" defines="ODIN_LINUX&#10;JUCE_JACK_CLIENT_NAME=JucePlugin_Name&#10;ODIN_DEBUG"
                        headerPath="/home/frot/Downloads/VST_SDK/VST2_SDK/&#10;/usr/include/freetype2/&#10;/usr/include/gtk-3.0/&#10;/usr/include/glib-2.0/&#10;/usr/lib/x86_64-linux-gnu/glib-2.0/include/&#10;/usr/include/pango-1.0/&#10;/usr/include/cairo/&#10;/usr/include/gdk-pixbuf-2.0/&#10;/usr/include/atk-1.0/&#10;../../libs/tuning-library"
@@ -2313,31 +2290,6 @@
         <MODULEPATH id="juce_dsp" path="../JUCE/modules"/>
       </MODULEPATHS>
     </LINUX_MAKE>
-    <VS2019 targetFolder="Builds/VisualStudio2019" extraDefs="JUCE_MODAL_LOOPS_PERMITTED">
-      <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" defines="ODIN_WIN&#10;ODIN_DEBUG" headerPath="../../libs/tuning-library&#10;"
-                       targetName="Odin2DEBUG"/>
-        <CONFIGURATION name="Release" defines="ODIN_WIN&#10;ODIN_RELEASE" headerPath="../../libs/tuning-library&#10;"
-                       isDebug="0" optimisation="4" linkTimeOptimisation="1"/>
-      </CONFIGURATIONS>
-      <MODULEPATHS>
-        <MODULEPATH id="juce_opengl"/>
-        <MODULEPATH id="juce_gui_extra"/>
-        <MODULEPATH id="juce_gui_basics"/>
-        <MODULEPATH id="juce_graphics"/>
-        <MODULEPATH id="juce_events"/>
-        <MODULEPATH id="juce_dsp"/>
-        <MODULEPATH id="juce_data_structures"/>
-        <MODULEPATH id="juce_cryptography"/>
-        <MODULEPATH id="juce_core"/>
-        <MODULEPATH id="juce_audio_utils"/>
-        <MODULEPATH id="juce_audio_processors"/>
-        <MODULEPATH id="juce_audio_plugin_client"/>
-        <MODULEPATH id="juce_audio_formats"/>
-        <MODULEPATH id="juce_audio_devices"/>
-        <MODULEPATH id="juce_audio_basics"/>
-      </MODULEPATHS>
-    </VS2019>
   </EXPORTFORMATS>
   <MODULES>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
@@ -2363,5 +2315,5 @@
     <OSX/>
   </LIVE_SETTINGS>
   <JUCEOPTIONS JUCE_VST3_CAN_REPLACE_VST2="0" JUCE_STRICT_REFCOUNTEDPOINTER="1"
-               JUCE_WEB_BROWSER="0" JUCE_USE_CURL="0"/>
+               JUCE_WEB_BROWSER="0" JUCE_USE_CURL="0" JUCE_JACK="1"/>
 </JUCERPROJECT>

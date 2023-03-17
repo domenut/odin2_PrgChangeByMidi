@@ -44,8 +44,8 @@ private:
     void midiProgChangeTimerInit();
     void timerCallback() override ;
     void categoryChanger();
-    void programChanger();
     void bankChanger();
+    void updateGuiAfterMidiPatchChange();
     // CMDEBUG<
 
     void loadPatchWithFileBrowserAndCopyToCategory(String p_directory);

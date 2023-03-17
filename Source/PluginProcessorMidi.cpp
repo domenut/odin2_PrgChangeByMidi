@@ -234,6 +234,8 @@ void OdinAudioProcessor::handleMidiMessage(const MidiMessage &p_midi_message ) {
 		m_midi_breath = p_midi_message.getControllerValue() / 127.f;
     } else if(p_midi_message.isController() && p_midi_message.getControllerNumber() == MIDI_CONTROLLER_NUMBER_BANK_SELECT){
         selectBankOrCategory(p_midi_message.getControllerValue());
+//    } else if(p_midi_message.isController() && p_midi_message.getControllerNumber() == MIDI_CONTROLLER_NUMBER_CATEGORY_SELECT) {
+//        selectCategory(p_midi_message.getControllerValue());
     } else if(p_midi_message.isProgramChange()) {
         selectProgram(p_midi_message.getProgramChangeNumber());
     }

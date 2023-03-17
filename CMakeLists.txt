@@ -44,6 +44,7 @@ juce_add_plugin(Odin2
   PLUGIN_MANUFACTURER_CODE "WAWA"
   PLUGIN_CODE "ODIN"
   IS_SYNTH TRUE
+  IS_EFFECT TRUE
   NEEDS_MIDI_INPUT TRUE
   COPY_PLUGIN_AFTER_BUILD ${ODIN2_COPY_PLUGIN_AFTER_BUILD}
   LV2_URI https://thewavewarden.com/odin2
@@ -65,6 +66,8 @@ target_compile_definitions(Odin2
     JUCE_WEB_BROWSER=0
     JUCE_MODAL_LOOPS_PERMITTED=1
     JUCE_DISPLAY_SPLASH_SCREEN=0
+    JUCE_JACK=1
+    JUCE_JACK_CLIENT_NAME="ODIN2-live"
 )
 
 # ==================== Check OS =======================

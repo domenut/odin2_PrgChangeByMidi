@@ -14,7 +14,6 @@
 */
 
 #include "NoiseOscillator.h"
-//#include "../JuceLibraryCode/JuceHeader.h"
 #include "stdlib.h"
 
 NoiseOscillator::NoiseOscillator() {
@@ -55,5 +54,6 @@ void NoiseOscillator::setHPFreq(float p_freq) {
 }
 
 void NoiseOscillator::setLPFreq(float p_freq) {
+    DBG("NoiseOsc..setLPFreq: " + String(p_freq) );
 	m_lowpass.m_freq_base = p_freq;
 }
