@@ -1,35 +1,53 @@
-This fork to allow:
 
-  Changing: Bank/Category/Patch via Midi messages.
-  
-  Current config (testing usability)
-  
-  Bank changes:
-    Midi cc:0 , values 64 to 127 Select Soundbank folder (selects bank '0_*' to '63_*' as seen on gui)
-    
-  Category changes:
-    Midi cc:0 , values 0 to 63 Select category in current soundbank
-    
-  Patch changes:
-    Midi program-change values 0 to 127 Select patch in current category
+Work In Progress!
 
-  Also adding midi-map per patch...
+ This fork adds:
+
+  CHANGING BANK/CATEGORY/PATCH VIA MIDI MESSAGES: (not working for VST3 version)
+  
+    Name banks/categories/patches (in gui preset library) with number and underscore "0_" to "63_" "0_My first bank" , "1_ Bank Two" , "45_ song 46" 
+    
+      Bank changes:
+        Midi cc:0 , values 64 to 127 Select Soundbank folder (selects named bank "0_*" to "63_*" as seen on gui)
+      Category changes:
+        Midi cc:0 , values 0 to 63 Select category in current soundbank
+      Patch changes:
+        Midi program-change values 0 to 127 Select patch in current category
+
+-------------------------------------------------------------------------------------------
+  
+  SAVING MIDI LEARNS PER PATCH:
+  
+    Midi learn as usual on Odin2 gui.
+    Save patch. (in gui preset library). Save will include midi map.
+    Mapped controls from loaded patches will have a blue outline on gui,
+      to help differentiate them from new, unsaved mappings.
+      
+    Problem:
+        To have multiple Odin2 GUI instances not interfere with one another,
+          I had to isolate them inside carla-patchbay instances.
+     
+-------------------------------------------------------------------------------------------
+    
+  AUDIO-LINE-IN MODULE: (LV2 version has problems with some hosts)
+  
+    In Oscillator dropdown, select "Audio input".
+      Add a signal... 
+        Use it like an oscillator.
+      Module includes the same high-pass, low-pass and volume controls as the noise oscillator.
+        
+     Problem:   
+      LV2 version, in carla/jalv, audio in is not passed to synth (It works in ardour7 and juce 'AudioPluginHost')
+      CLAP version works. (vst3 has other problems, (midi patch change))
+    
+-------------------------------------------------------------------------------------------
    
 Current caveats:
-    1) Bank/Category/Patch names MUST start with number followed by an underscore for this to work.
-   
-   eg: 3_ *        - [midi cc 0 , value 67] selects this soundbank. (Starts in bank named: "0_*")
-        0_ *       - [midi cc 0 , value 0 ] selects this category. (IN SELECTED SOUNDBANK!, Starts in category: "0_*")
-          6_ *     - [midi program change value: 6]  selects this patch. (IN SELECTED CATEGORY!)
-          
-    2) Although it works, when gui is showing and reflecting changes, the parameters are being changed twice.
-            ( need to go deeper to fix )
-                This problem goes away when running headless in carla.
 
-    3) I had to add: #include <utility>
+     I had to add: #include <utility>
         to top of file: ./libs/JUCELV2/modules/juce_gui_basics/windows/juce_ComponentPeer.h
         to build juiceade.
-
-    4) I am obviously winging it here.
+    
+     I am obviously winging it here.
 
 
